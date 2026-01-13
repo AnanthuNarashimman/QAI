@@ -13,7 +13,7 @@ async def main():
     
     task = """
 Navigate to 'https://algo-flow-roan.vercel.app/'. 
-Explore the homepage and identify all sections.
+Explore the homepage and identify all sections. Scroll through all sections if needed.
 Look for any 'Get Started' or 'Login' buttons or any button that looks like it will help us to proceed to the application page and describe what they do.
 Do NOT click any buttons that navigate away from the site.
 Stay on the algo-flow-roan.vercel.app domain.
