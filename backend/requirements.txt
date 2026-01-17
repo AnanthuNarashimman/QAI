@@ -1,1 +1,8 @@
-c
+flask
+flask-socketio
+flask-cors
+google-generativeai
+uv
+playwright
+networkx
+python-dotenv
