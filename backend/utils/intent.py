@@ -1,7 +1,9 @@
 from pydantic import BaseModel, Field
 from typing import List
+import os
 
 import google.genai as genai
+
 
 class AuditConfig(BaseModel):
     website_type: str = Field(
@@ -31,24 +33,35 @@ class AuditConfig(BaseModel):
 
 
 def extract_audit_config(user_prompt: str):
+    print("Started")
     
-    client = genai.Client()
+    client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     
-    prompt = """
+    prompt = f"""
     You are an expert Project Manager. 
     Analyze the user's messy request and extract the project configuration.
     If the user misses details, infer reasonable defaults based on the website type.
-    """
     
-    response = client.models.generate_content(
-        model="gemini-2.5-flash-lite",
-        contents=prompt,
-        config={
+    User request:
+    {user_prompt}
+    """
+    try:
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-exp",
+            contents=prompt,
+            config={
             "response_mime_type": "application/json",
             "response_json_schema": AuditConfig.model_json_schema(),
-        },
-    )
+            },
+        )
     
-    strucrued_config = AuditConfig.model_validate_json(response.text)
-    print(strucrued_config)
+        structured_config = AuditConfig.model_validate_json(response.text)
+        print("Completed")
+        print(structured_config)
+    
+        return structured_config
+    
+    except Exception as e:
+        print(e)
+        return None
     

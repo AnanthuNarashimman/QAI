@@ -4,6 +4,7 @@ import asyncio
 import requests
 from urllib.parse import urlparse
 from bfs_crawler import bfs_crawler
+from utils.intent import extract_audit_config
 
 app = Flask(__name__)
 
@@ -75,6 +76,7 @@ def analyze_website():
         
         url = data.get('url', '').strip()
         max_pages = data.get('max_pages', 5)
+        user_intent = data.get('user_intent', None)
         
         # Validate max_pages
         if not isinstance(max_pages, int) or max_pages < 1 or max_pages > 10:
@@ -102,9 +104,25 @@ def analyze_website():
         
         print(f"URL is reachable. Starting analysis...")
         
-        # Run the BFS crawler (this will take 2-5 minutes)
+        # 4. Parse user intent if provided
+        audit_config = None
+        if user_intent:
+            print(f"Parsing user intent: {user_intent[:100]}...")
+            audit_config_obj = extract_audit_config(user_intent)
+            if audit_config_obj:
+                # Convert Pydantic model to dict
+                audit_config = audit_config_obj.model_dump()
+                print(f"Parsed config: {audit_config}")
+            else:
+                print("Warning: Failed to parse user intent, continuing without it...")
+        
+        # 5. Run the BFS crawler (this will take 2-5 minutes)
         # asyncio.run() handles the async function in sync Flask context
-        results = asyncio.run(bfs_crawler(url, max_pages))
+        results = asyncio.run(bfs_crawler(url, max_pages, audit_config))
+        
+        # Add audit_config to results for frontend display
+        if audit_config:
+            results['audit_config'] = audit_config
         
         print(f"Analysis complete. Analyzed {results['total_pages_analyzed']} pages.")
         

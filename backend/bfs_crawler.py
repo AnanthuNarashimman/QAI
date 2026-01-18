@@ -45,13 +45,14 @@ def is_valid_link(url, base_domain):
     return link_domain == base_domain
 
 
-async def bfs_crawler(starting_url, max_pages=5):
+async def bfs_crawler(starting_url, max_pages=5, audit_config=None):
     """
     Crawl website using BFS, analyzing each page for CTA and theme consistency.
     
     Args:
         starting_url: The initial URL to start crawling from
         max_pages: Maximum number of pages to analyze (default: 5)
+        audit_config: Optional dict with user's intended design configuration
     
     Returns:
         Dictionary containing analysis results for all crawled pages
@@ -90,7 +91,7 @@ async def bfs_crawler(starting_url, max_pages=5):
             
             # Validate page (CTA and theme analysis)
             print("Validating CTA and theme...")
-            validation = await validate_page(current_url)
+            validation = await validate_page(current_url, audit_config)
             
             # Process extracted links
             if extracted and 'posts' in extracted:
@@ -149,24 +150,24 @@ async def bfs_crawler(starting_url, max_pages=5):
 
 
 # Test function
-async def test_crawler():
-    """Test the crawler with a sample URL"""
-    test_url = "https://cubeaisolutions.com"
-    results = await bfs_crawler(test_url, max_pages=5)
+# async def test_crawler():
+#     """Test the crawler with a sample URL"""
+#     test_url = "https://cubeaisolutions.com"
+#     results = await bfs_crawler(test_url, max_pages=5)
     
-    print("\nFinal Results Summary:")
-    for result in results['results']:
-        if 'error' not in result:
-            print(f"\n{result['url']}")
-            if result.get('validation'):
-                val = result['validation']
-                if 'values' in val and len(val['values']) > 0:
-                    v = val['values'][0]
-                    print(f"   CTA Score: {v.get('cta_score', 'N/A')}/100")
-                    print(f"   Theme Score: {v.get('theme_score', 'N/A')}/100")
-        else:
-            print(f"\nERROR: {result['url']} - {result['error']}")
+#     print("\nFinal Results Summary:")
+#     for result in results['results']:
+#         if 'error' not in result:
+#             print(f"\n{result['url']}")
+#             if result.get('validation'):
+#                 val = result['validation']
+#                 if 'values' in val and len(val['values']) > 0:
+#                     v = val['values'][0]
+#                     print(f"   CTA Score: {v.get('cta_score', 'N/A')}/100")
+#                     print(f"   Theme Score: {v.get('theme_score', 'N/A')}/100")
+#         else:
+#             print(f"\nERROR: {result['url']} - {result['error']}")
 
 
-if __name__ == "__main__":
-    asyncio.run(test_crawler())
+# if __name__ == "__main__":
+#     asyncio.run(test_crawler())

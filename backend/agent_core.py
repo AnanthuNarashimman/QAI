@@ -69,18 +69,39 @@ async def extract_redirects(url):
     return extracted_urls
 
     
-async def validate_page(url):
+async def validate_page(url, audit_config=None):
     
     validation_controller = Controller(output_model= Values)
+    
+    # Build dynamic context section if audit_config is provided
+    context_section = ""
+    if audit_config:
+        context_section = f"""
+    --- USER'S INTENDED DESIGN ---
+    The user describes their website as:
+    - Type: {audit_config.get('website_type', 'Not specified')}
+    - Target Audience: {audit_config.get('target_audience', 'Not specified')}
+    - Theme: {audit_config.get('theme_description', 'Not specified')}
+    - Intended Tone: {audit_config.get('inferred_tone', 'Not specified')}
+    - Primary Goal: {audit_config.get('primary_goal', 'Not specified')}
+    
+    ⚠️ YOUR TASK: Compare the ACTUAL website against these intentions.
+    - Does the design match the intended theme "{audit_config.get('theme_description', '')}"?
+    - Does the tone match "{audit_config.get('inferred_tone', '')}"?
+    - Are CTAs aligned with the primary goal "{audit_config.get('primary_goal', '')}"?
+    - Is it appropriate for "{audit_config.get('target_audience', '')}"?
+    - Point out specific mismatches between intended vs actual.
+    """
     
     task = f"""
     ROLE: Act as a Senior UI/UX Auditor and Conversion Rate Optimization (CRO) Specialist.
 
     GOAL: Conduct a strict, professional audit of {url} focusing on Visual Consistency and Call-to-Action (CTA) effectiveness.
+    {context_section}
 
     --- STEP 1: NAVIGATION & OBSERVATION ---
     1. Navigate to {url}.
-    2. Slowly scroll from the top to the bottom of the page to ensure all lazy-loaded elements render.
+    2. Slowly scroll from the top to the bottom of the page to ensure all lazy-loaded elements render (important).
     3. Identify every distinct section (Hero, Features, Testimonials, Footer, etc.).
 
     --- STEP 2: THEME VALIDATION (Design System Check) ---
@@ -90,6 +111,7 @@ async def validate_page(url):
     - Palette: Are the primary and secondary colors used correctly, or are there clashing colors?
     - Whitespace: Is the layout breathing properly, or is it cluttered?
     - SCORING: Provide a score (0-100). A score <80 requires severe critique.
+    {"- Compare with user's intended theme if provided." if audit_config else ""}
 
     --- STEP 3: CTA EFFICIENCY (Conversion Check) ---
     Analyze all primary and secondary buttons.
@@ -97,10 +119,12 @@ async def validate_page(url):
     - Copywriting: Is the text actionable (e.g., "Get Started" vs "Submit")?
     - Placement: Are CTAs visible without excessive scrolling?
     - SCORING: Provide a score (0-100). Deduct points for generic text or low contrast.
+    {"- Check if CTAs align with the primary goal: " + audit_config.get('primary_goal', '') if audit_config else ""}
 
     --- CONSTRAINTS ---
     - Be specific: Quote the exact text of the element when reporting an issue (e.g., "The 'Contact' button in the Footer...").
     - Be constructive and clear, Dont give general recommendations like 'improve color theme'. Mention what exactly can be changed and how can it improve the page.
+    {"- If user provided intent, explicitly mention mismatches between intended vs actual design." if audit_config else ""}
     - Do NOT click links that leave the domain.
     - Stay strictly on {url}.
     """
