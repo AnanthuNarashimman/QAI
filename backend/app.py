@@ -1,0 +1,151 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import asyncio
+import requests
+from urllib.parse import urlparse
+from bfs_crawler import bfs_crawler
+
+app = Flask(__name__)
+
+
+CORS(app)
+
+
+def validate_url(url):
+    if not url or not url.strip():
+        return False, "URL is required"
+    
+    # Parse URL
+    try:
+        parsed = urlparse(url)
+    except Exception:
+        return False, "Invalid URL format"
+    
+    # Check if scheme is http or https
+    if parsed.scheme not in ['http', 'https']:
+        return False, "URL must start with http:// or https://"
+    
+    # Check if domain exists
+    if not parsed.netloc:
+        return False, "URL must include a domain name"
+    
+    return True, None
+
+
+def check_url_reachable(url, timeout=10):
+    try:
+        # Use HEAD request (faster than GET, doesn't download full page)
+        response = requests.head(url, timeout=timeout, allow_redirects=True)
+        
+        # Accept 2xx and 3xx status codes as success
+        if response.status_code < 400:
+            return True, None
+        else:
+            return False, f"Website returned status code {response.status_code}"
+            
+    except requests.exceptions.Timeout:
+        return False, "Request timeout - website took too long to respond"
+    except requests.exceptions.ConnectionError:
+        return False, "Connection error - could not reach the website"
+    except requests.exceptions.TooManyRedirects:
+        return False, "Too many redirects"
+    except Exception as e:
+        return False, f"Error checking URL: {str(e)}"
+
+
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    return jsonify({
+        "status": "ok",
+        "message": "QAI Backend API is running"
+    }), 200
+
+
+@app.route('/api/analyze', methods=['POST'])
+def analyze_website():
+    try:
+        # 1. Get data from request
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                "status": "error",
+                "message": "Request body is required"
+            }), 400
+        
+        url = data.get('url', '').strip()
+        max_pages = data.get('max_pages', 5)
+        
+        # Validate max_pages
+        if not isinstance(max_pages, int) or max_pages < 1 or max_pages > 10:
+            return jsonify({
+                "status": "error",
+                "message": "max_pages must be an integer between 1 and 10"
+            }), 400
+        
+        # 2. Validate URL format
+        is_valid, error_msg = validate_url(url)
+        if not is_valid:
+            return jsonify({
+                "status": "error",
+                "message": error_msg
+            }), 400
+        
+        # 3. Check if URL is reachable
+        print(f"Checking if {url} is reachable...")
+        is_reachable, error_msg = check_url_reachable(url)
+        if not is_reachable:
+            return jsonify({
+                "status": "error",
+                "message": error_msg
+            }), 400
+        
+        print(f"URL is reachable. Starting analysis...")
+        
+        # 4. Run the BFS crawler (this will take 2-5 minutes)
+        # asyncio.run() handles the async function in sync Flask context
+        results = asyncio.run(bfs_crawler(url, max_pages))
+        
+        print(f"Analysis complete. Analyzed {results['total_pages_analyzed']} pages.")
+        
+        # 5. Return results
+        return jsonify({
+            "status": "success",
+            "data": results
+        }), 200
+        
+    except Exception as e:
+        # Catch any unexpected errors
+        print(f"ERROR in /api/analyze: {str(e)}")
+        return jsonify({
+            "status": "error",
+            "message": f"Internal server error: {str(e)}"
+        }), 500
+
+
+@app.route('/', methods=['GET'])
+def root():
+    """
+    Root endpoint - provides API information
+    """
+    return jsonify({
+        "name": "QAI - Quality AI Analyzer",
+        "version": "1.0.0",
+        "description": "Analyzes websites for CTA efficiency and theme consistency",
+        "endpoints": {
+            "health": "GET /api/health",
+            "analyze": "POST /api/analyze"
+        }
+    }), 200
+
+
+if __name__ == '__main__':
+    print("="*60)
+    print("QAI Backend API Server")
+    print("="*60)
+    print("Server starting on http://localhost:5000")
+    print("API endpoint: POST http://localhost:5000/api/analyze")
+    print("Health check: GET http://localhost:5000/api/health")
+    print("="*60)
+    
+    app.run(debug=True, host='0.0.0.0', port=5000)
