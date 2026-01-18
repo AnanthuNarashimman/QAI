@@ -1,15 +1,13 @@
 from browser_use import Agent, ChatGoogle, Controller
 from dotenv import load_dotenv
 import asyncio
+import json
 from pydantic import BaseModel, Field
 from typing import List
 
 load_dotenv()
 
 llm = ChatGoogle(model="gemini-2.0-flash-exp")
-
-# Hardcoded for now, later this will be provided by the 
-url = "https://www.prasklatechnology.com"
 
 
 
@@ -63,9 +61,15 @@ async def extract_redirects(url):
     The Queue must be updated with new urls
     """
     extracted_urls = extraction_result.final_result()
+    
+    # Parse JSON string to dictionary if needed
+    if isinstance(extracted_urls, str):
+        extracted_urls = json.loads(extracted_urls)
+    
+    return extracted_urls
 
     
-async def validate_page():
+async def validate_page(url):
     
     validation_controller = Controller(output_model= Values)
     
@@ -105,6 +109,12 @@ async def validate_page():
     
     result = await agent.run()
     
-    print(result.final_result()) 
+    validation_result = result.final_result()
+    
+    # Parse JSON string to dictionary if needed
+    if isinstance(validation_result, str):
+        validation_result = json.loads(validation_result)
+    
+    return validation_result
     
 
