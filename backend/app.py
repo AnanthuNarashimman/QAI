@@ -34,7 +34,7 @@ def validate_url(url):
 
 def check_url_reachable(url, timeout=10):
     try:
-        # Use HEAD request (faster than GET, doesn't download full page)
+        # HEAD request (faster than GET, doesn't download full page)
         response = requests.head(url, timeout=timeout, allow_redirects=True)
         
         # Accept 2xx and 3xx status codes as success
@@ -64,7 +64,7 @@ def health_check():
 @app.route('/api/analyze', methods=['POST'])
 def analyze_website():
     try:
-        # 1. Get data from request
+        # Get data from request
         data = request.get_json()
         
         if not data:
@@ -83,7 +83,7 @@ def analyze_website():
                 "message": "max_pages must be an integer between 1 and 10"
             }), 400
         
-        # 2. Validate URL format
+        # Validate URL format
         is_valid, error_msg = validate_url(url)
         if not is_valid:
             return jsonify({
@@ -91,7 +91,7 @@ def analyze_website():
                 "message": error_msg
             }), 400
         
-        # 3. Check if URL is reachable
+        # Check if URL is reachable
         print(f"Checking if {url} is reachable...")
         is_reachable, error_msg = check_url_reachable(url)
         if not is_reachable:
@@ -102,7 +102,7 @@ def analyze_website():
         
         print(f"URL is reachable. Starting analysis...")
         
-        # 4. Run the BFS crawler (this will take 2-5 minutes)
+        # Run the BFS crawler (this will take 2-5 minutes)
         # asyncio.run() handles the async function in sync Flask context
         results = asyncio.run(bfs_crawler(url, max_pages))
         
