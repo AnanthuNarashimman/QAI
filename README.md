@@ -2,6 +2,9 @@
 
 An intelligent website auditor that analyzes non-functional aspects of websites using AI agents powered by Gemini.
 
+![Status](https://img.shields.io/badge/status-under%20development-orange)
+
+
 ## What Does It Do?
 
 QAI crawls websites and evaluates them based on critical design and user experience factors that often get overlooked:
