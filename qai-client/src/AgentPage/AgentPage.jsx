@@ -5,6 +5,58 @@ import { Sparkles, ChevronDown, Cpu, Check, Lock, PenLine, Globe, SwatchBook, Br
 
 function AgentPage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [url, setUrl] = useState('');
+  const [maxPages, setMaxPages] = useState(1);
+  const [intent, setIntent] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleStartAudit = async () => {
+    // Clear previous error
+    setError('');
+
+    // Validate inputs
+    if (!url.trim()) {
+      setError('Please enter a URL');
+      return;
+    }
+
+    if (!intent.trim()) {
+      setError('Please describe your site\'s intent');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('http://localhost:5000/api/analyze', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          url: url,
+          max_pages: maxPages,
+          user_intent: intent,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.status === 'success') {
+        console.log('Analysis results:', data.data);
+        // TODO: Navigate to results page or display results
+        alert('Audit complete! Check console for results.');
+      } else {
+        setError(data.message || 'Analysis failed');
+      }
+    } catch (err) {
+      setError('Failed to connect to backend. Make sure the server is running.');
+      console.error('Error:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -30,6 +82,8 @@ function AgentPage() {
               type="text"
               className={styles.workflowInput}
               placeholder="https://example.com"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
             />
             <span className={styles.inputIcon}>
               <PenLine size={20} />
@@ -40,7 +94,8 @@ function AgentPage() {
               type="number"
               min="1"
               max="5"
-              defaultValue="1"
+              value={maxPages}
+              onChange={(e) => setMaxPages(parseInt(e.target.value) || 1)}
               className={styles.workflowInputCompact}
               placeholder="1-5"
             />
@@ -52,6 +107,8 @@ function AgentPage() {
               type="text"
               className={styles.workflowInput}
               placeholder="Describe what your site should achieve and who it's for..."
+              value={intent}
+              onChange={(e) => setIntent(e.target.value)}
             />
             <span className={styles.inputIcon}>
               <PenLine size={20} />
@@ -85,11 +142,17 @@ function AgentPage() {
               )}
             </div>
 
-            <button className={styles.createBtn}>
+            <button className={styles.createBtn} onClick={handleStartAudit} disabled={isLoading}>
               <Sparkles size={16} />
-              Start Audit
+              {isLoading ? 'Analyzing...' : 'Start Audit'}
             </button>
           </div>
+
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
+            </div>
+          )}
         </div>
 
         {/* Help Section */}

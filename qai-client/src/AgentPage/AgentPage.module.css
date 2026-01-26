@@ -560,6 +560,24 @@
   box-shadow: 0 4px 20px rgba(0, 180, 216, 0.4);
 }
 
+.createBtn:disabled {
+  background-color: rgba(0, 180, 216, 0.5);
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Error Message */
+.errorMessage {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .sparkleIcon {
   width: 16px;
   height: 16px;

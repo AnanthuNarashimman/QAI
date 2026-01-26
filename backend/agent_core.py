@@ -7,8 +7,6 @@ from typing import List
 
 load_dotenv()
 
-llm = ChatGoogle(model="gemini-3-pro-preview")
-
 
 
 # Extraction related classes 
@@ -40,6 +38,8 @@ class Values(BaseModel):
 
 async def extract_redirects(url):
     # Extraction of navigation links
+    
+    llm = ChatGoogle(model="gemini-2.0-flash-exp")
         
     extraction_controller = Controller(output_model=redirects)
     
@@ -76,6 +76,8 @@ async def extract_redirects(url):
 
     
 async def validate_page(url, audit_config=None):
+    
+    llm = ChatGoogle(model="gemini-3-pro-preview")
     
     validation_controller = Controller(output_model= Values)
     
