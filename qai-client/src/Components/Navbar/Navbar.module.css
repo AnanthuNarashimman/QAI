@@ -1,0 +1,168 @@
+/* Navbar Module CSS */
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  backdrop-filter: blur(12px);
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  border-radius: 50px;
+  box-shadow: 0 4px 30px rgba(0, 180, 216, 0.12);
+  width: 50%;
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logoIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.logoIcon path {
+  fill: #00D4FF;
+  stroke: #00D4FF;
+}
+
+.logoText {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  letter-spacing: -0.5px;
+}
+
+.earlyAccess {
+  font-size: 9px;
+  font-weight: 600;
+  color: #00B4D8;
+  letter-spacing: 1px;
+  margin-left: 6px;
+  text-transform: uppercase;
+  background-color: rgba(0, 180, 216, 0.1);
+  padding: 3px 8px;
+  border-radius: 10px;
+}
+
+.navCenter {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(0, 180, 216, 0.06);
+  border-radius: 30px;
+  padding: 4px;
+}
+
+.navTab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  color: rgba(26, 26, 46, 0.5);
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+}
+
+.navTab:hover {
+  color: rgba(26, 26, 46, 0.8);
+}
+
+.navTabActive {
+  background-color: #ffffff;
+  color: #00B4D8;
+  box-shadow: 0 2px 8px rgba(0, 180, 216, 0.2);
+}
+
+.navIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.navRight {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.websiteLink {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(26, 26, 46, 0.6);
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.websiteLink:hover {
+  color: #00B4D8;
+}
+
+.externalIcon {
+  width: 14px;
+  height: 14px;
+}
+
+.getStartedBtn {
+  padding: 8px 18px;
+  background-color: #00B4D8;
+  color: #ffffff;
+  border: none;
+  border-radius: 20px;
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 180, 216, 0.4);
+}
+
+.getStartedBtn:hover {
+  background-color: #0096c7;
+  box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .nav {
+    width: 70%;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav {
+    width: 90%;
+    padding: 10px 16px;
+  }
+
+  .navCenter {
+    display: none;
+  }
+
+  .navTab {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
