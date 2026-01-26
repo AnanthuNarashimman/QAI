@@ -1,6 +1,9 @@
 # QAI - Quality AI Analyzer
 
-An intelligent website auditor that analyzes non-functional aspects of websites using AI agents powered by Gemini 2.0.
+An intelligent website auditor that analyzes non-functional aspects of websites using AI agents powered by Gemini.
+
+![Status](https://img.shields.io/badge/status-under%20development-orange)
+
 
 ## What Does It Do?
 
@@ -28,11 +31,11 @@ QAI crawls websites and evaluates them based on critical design and user experie
 
 ## Built For
 
-Google Gemini API Developer Competition - showcasing Gemini 2.0's capabilities in visual understanding, structured output generation, and browser automation.
+Google Gemini 3 Hackathon - showcasing Gemini's capabilities in visual understanding, structured output generation, and browser automation.
 
 ## Tech Stack
 
-- **Backend**: Python, Flask, browser-use
-- **AI**: Gemini 2.0 Flash (Experimental)
+- **Backend**: Python, Flask
+- **Automation**: browser-use
+- **AI**: Gemini 
 - **Frontend**: React, Vite
-- **Crawling**: BFS algorithm with intelligent link filtering
