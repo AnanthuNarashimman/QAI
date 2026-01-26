@@ -7,7 +7,7 @@ from typing import List
 
 load_dotenv()
 
-llm = ChatGoogle(model="gemini-2.0-flash-exp")
+llm = ChatGoogle(model="gemini-3-pro-preview")
 
 
 
@@ -44,8 +44,14 @@ async def extract_redirects(url):
     extraction_controller = Controller(output_model=redirects)
     
     task = f"""
-    Navigate to the provided {url}.     
-    Explore the page and identify all sections. Scroll through all sections if needed.
+    Navigate to the provided {url}.
+    Explore the page and identify all sections.
+
+    Scroll through the ENTIRE page using viewport-based scrolling:
+    - Use window.scrollBy(0, window.innerHeight) to scroll by one full viewport at a time
+    - Scroll from 0vh → 100vh → 200vh → etc. until you reach the bottom
+    - Pause briefly after each scroll to observe all elements
+
     Find and list any links or buttons that takes user from the current page to another.
     Do not click any buttons that navigates away from the site.
     Stay on the domain of the provided url {url}
@@ -94,39 +100,81 @@ async def validate_page(url, audit_config=None):
     """
     
     task = f"""
-    ROLE: Act as a Senior UI/UX Auditor and Conversion Rate Optimization (CRO) Specialist.
+    ROLE: Act as a meticulous UI/UX Auditor who catches every visual flaw a human eye would notice.
 
-    GOAL: Conduct a strict, professional audit of {url} focusing on Visual Consistency and Call-to-Action (CTA) effectiveness.
+    GOAL: Perform a SECTION-BY-SECTION deep audit of {url}. Do NOT give generic feedback. Every issue must reference a SPECIFIC element.
     {context_section}
 
-    --- STEP 1: NAVIGATION & OBSERVATION ---
-    1. Navigate to {url}.
-    2. Slowly scroll from the top to the bottom of the page to ensure all lazy-loaded elements render (important).
-    3. Identify every distinct section (Hero, Features, Testimonials, Footer, etc.).
+    ⚠️ CRITICAL: ANALYZE AS YOU SCROLL - NOT AFTER!
+    You have NO memory of previous viewports. You can ONLY see what is currently on screen.
+    Therefore, you MUST analyze and record findings for each viewport BEFORE scrolling to the next.
+    If you scroll first and try to analyze later, you will fail because you cannot see previous sections.
 
-    --- STEP 2: THEME VALIDATION (Design System Check) ---
-    Analyze the visual identity across all sections.
-    - Design : Does the design matches the content delivered and the enhances the view? Does it make the flow bad?
-    - Consistency: Do the fonts, button styles, and spacing remain consistent?
-    - Palette: Are the primary and secondary colors used correctly, or are there clashing colors?
-    - Whitespace: Is the layout breathing properly, or is it cluttered?
-    - SCORING: Provide a score (0-100). A score <80 requires severe critique.
-    {"- Compare with user's intended theme if provided." if audit_config else ""}
+    --- PROCESS: SCROLL → ANALYZE → RECORD → REPEAT ---
 
-    --- STEP 3: CTA EFFICIENCY (Conversion Check) ---
-    Analyze all primary and secondary buttons.
-    - Contrast: Do buttons stand out against their background?
-    - Copywriting: Is the text actionable (e.g., "Get Started" vs "Submit")?
-    - Placement: Are CTAs visible without excessive scrolling?
-    - SCORING: Provide a score (0-100). Deduct points for generic text or low contrast.
-    {"- Check if CTAs align with the primary goal: " + audit_config.get('primary_goal', '') if audit_config else ""}
+    For EACH viewport, do ALL of the following BEFORE scrolling:
 
-    --- CONSTRAINTS ---
-    - Be specific: Quote the exact text of the element when reporting an issue (e.g., "The 'Contact' button in the Footer...").
-    - Be constructive and clear, Dont give general recommendations like 'improve color theme'. Mention what exactly can be changed and how can it improve the page.
-    {"- If user provided intent, explicitly mention mismatches between intended vs actual design." if audit_config else ""}
-    - Do NOT click links that leave the domain.
-    - Stay strictly on {url}.
+    1. IDENTIFY what section you're viewing (Hero, Features, Testimonials, Footer, etc.)
+
+    2. FIND AND RECORD ALL CTAs in this viewport:
+       - Look for buttons, links, form submits
+       - Record the EXACT text (e.g., "Get Started", "Learn More", "Sign Up")
+       - Note the section where you found it
+       - Evaluate: visibility, contrast, copy quality, placement, size
+       {"- Check if it aligns with primary goal: " + audit_config.get('primary_goal', '') if audit_config else ""}
+
+    3. ANALYZE VISUAL ELEMENTS in this viewport:
+       **Icons & Graphics:** colors consistent? same style? uniform sizes? pixelated?
+       **Typography:** hierarchy correct? readable? good contrast? orphaned words?
+       **Buttons:** hover states? uniform sizing? good contrast?
+       **Spacing:** aligned? consistent gaps? proper breathing room?
+       **Colors:** clashing? inconsistent accents? consistent shadows/borders?
+       {"- Compare against intended theme: " + audit_config.get('theme_description', '') if audit_config else ""}
+
+    4. RECORD specific issues with exact element names and locations
+
+    5. ONLY THEN scroll using: window.scrollBy(0, window.innerHeight)
+
+    --- STEP-BY-STEP EXECUTION ---
+
+    STEP 1: Navigate to {url}
+
+    STEP 2: VIEWPORT 1 (Top of page)
+    - What section is this? (likely Hero/Header)
+    - List ALL CTAs visible with their exact text
+    - Note visual issues with specific element references
+    - Record your findings
+    - NOW scroll down one viewport
+
+    STEP 3: VIEWPORT 2
+    - Wait 2 seconds to observe
+    - What section is this?
+    - List ALL CTAs visible with their exact text
+    - Note visual issues
+    - Record findings
+    - Scroll down
+
+    STEP 4: Continue for VIEWPORT 3, 4, 5... until you reach the footer
+
+    STEP 5: AFTER analyzing ALL viewports, compile final output:
+    - ctas_found: Total count of ALL CTAs you recorded across all viewports
+    - cta_score: 0-100 based on CTA quality (deduct for generic text, poor contrast, bad placement)
+    - cta_thoughts: List of specific CTA issues found
+    - theme_score: 0-100 based on visual issues (deduct 5-10 points per issue)
+    - theme_thoughts: List of specific visual issues found
+    {"- Call out mismatches between user's stated intent and actual implementation" if audit_config else ""}
+
+    --- OUTPUT REQUIREMENTS ---
+    - Reference elements by EXACT text/location (e.g., "The 'Learn More' button in Features section")
+    - Give SPECIFIC fixes (e.g., "Change button color from #ccc to #0066cc for better contrast")
+    - Only report issues, skip things that are fine
+    - Do NOT click links that leave the domain
+    - Stay strictly on {url}
+
+    --- VALIDATION BEFORE CALLING DONE ---
+    ⚠️ If ctas_found = 0, you missed CTAs. Most websites have multiple CTAs.
+    ⚠️ If you have no specific element names in your issues, you didn't analyze properly.
+    ⚠️ If scores are 0 with no reasoning, go back and re-analyze.
     """
     
     agent = Agent(llm=llm, task=task, controller=validation_controller)
