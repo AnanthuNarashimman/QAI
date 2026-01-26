@@ -34,6 +34,16 @@ function AgentPage() {
             <span className={styles.inputIcon}>
               <PenLine size={20} />
             </span>
+            <span className={styles.fieldDivider}></span>
+            <span className={styles.workflowLabel}>Max Pages</span>
+            <input
+              type="number"
+              min="1"
+              max="5"
+              defaultValue="1"
+              className={styles.workflowInputCompact}
+              placeholder="1-5"
+            />
           </div>
 
           <div className={styles.workflowRow}>

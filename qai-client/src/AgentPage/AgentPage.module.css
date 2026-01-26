@@ -292,6 +292,26 @@
   color: rgba(26, 26, 46, 0.25);
 }
 
+.workflowInputCompact {
+  width: 60px;
+  background: transparent;
+  border: none;
+  color: rgba(26, 26, 46, 0.8);
+  font-size: 14px;
+  outline: none;
+  padding: 4px 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.workflowInputCompact::placeholder {
+  color: rgba(26, 26, 46, 0.35);
+}
+
+.workflowInputCompact:focus::placeholder {
+  color: rgba(26, 26, 46, 0.25);
+}
+
 .inputIcon {
   width: 20px;
   height: 20px;
@@ -305,6 +325,13 @@
 .inputIcon svg {
   width: 14px;
   height: 14px;
+}
+
+.fieldDivider {
+  width: 1px;
+  height: 24px;
+  background-color: rgba(0, 180, 216, 0.2);
+  margin: 0 16px;
 }
 
 /* Workflow Actions */
