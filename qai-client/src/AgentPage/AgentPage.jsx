@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { io } from 'socket.io-client';
 import styles from './AgentPage.module.css';
 import Navbar from '../Components/Navbar';
 import { Sparkles, ChevronDown, Cpu, Check, Lock, PenLine, Globe, SwatchBook, BrainCog } from 'lucide-react';
@@ -10,8 +11,9 @@ function AgentPage() {
   const [intent, setIntent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const socketRef = useRef(null);
 
-  const handleStartAudit = async () => {
+  const handleStartAudit = () => {
     // Clear previous error
     setError('');
 
@@ -28,34 +30,61 @@ function AgentPage() {
 
     setIsLoading(true);
 
-    try {
-      const response = await fetch('http://localhost:5000/api/analyze', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          url: url,
-          max_pages: maxPages,
-          user_intent: intent,
-        }),
+    // Connect to WebSocket
+    const socket = io('http://localhost:5000');
+    socketRef.current = socket;
+
+    socket.on('connect', () => {
+      console.log('[WebSocket] Connected to server');
+
+      // Start analysis via WebSocket
+      socket.emit('start_analysis', {
+        url: url,
+        max_pages: maxPages,
+        user_intent: intent,
       });
+    });
 
-      const data = await response.json();
+    // Listen for log messages
+    socket.on('log', (data) => {
+      const logStyle = {
+        info: 'color: #888',
+        success: 'color: #4ade80',
+        error: 'color: #f87171',
+        warning: 'color: #fbbf24',
+        progress: 'color: #60a5fa; font-weight: bold',
+        url: 'color: #a78bfa',
+        divider: 'color: #444',
+      };
+      console.log(`%c[Agent] ${data.message}`, logStyle[data.type] || 'color: #888');
+    });
 
-      if (response.ok && data.status === 'success') {
-        console.log('Analysis results:', data.data);
-        // TODO: Navigate to results page or display results
-        alert('Audit complete! Check console for results.');
-      } else {
-        setError(data.message || 'Analysis failed');
-      }
-    } catch (err) {
-      setError('Failed to connect to backend. Make sure the server is running.');
-      console.error('Error:', err);
-    } finally {
+    // Listen for completion
+    socket.on('complete', (data) => {
+      console.log('[WebSocket] Analysis complete!');
+      console.log('Results:', data.data);
       setIsLoading(false);
-    }
+      socket.disconnect();
+    });
+
+    // Listen for errors
+    socket.on('error', (data) => {
+      console.error('[WebSocket] Error:', data.message);
+      setError(data.message);
+      setIsLoading(false);
+      socket.disconnect();
+    });
+
+    socket.on('disconnect', () => {
+      console.log('[WebSocket] Disconnected');
+      setIsLoading(false);
+    });
+
+    socket.on('connect_error', (err) => {
+      console.error('[WebSocket] Connection error:', err);
+      setError('Failed to connect to backend. Make sure the server is running.');
+      setIsLoading(false);
+    });
   };
 
   return (

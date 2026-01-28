@@ -39,7 +39,7 @@ class Values(BaseModel):
 async def extract_redirects(url):
     # Extraction of navigation links
     
-    llm = ChatGoogle(model="gemini-2.0-flash-exp")
+    llm = ChatGoogle(model="gemini-2.5-flash-lite")
         
     extraction_controller = Controller(output_model=redirects)
     

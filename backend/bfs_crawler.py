@@ -45,102 +45,106 @@ def is_valid_link(url, base_domain):
     return link_domain == base_domain
 
 
-async def bfs_crawler(starting_url, max_pages=5, audit_config=None):
+async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=None):
     """
     Crawl website using BFS, analyzing each page for CTA and theme consistency.
-    
+
     Args:
         starting_url: The initial URL to start crawling from
         max_pages: Maximum number of pages to analyze (default: 5)
         audit_config: Optional dict with user's intended design configuration
-    
+        emit_log: Optional SocketIO emit function for streaming logs to frontend
+
     Returns:
         Dictionary containing analysis results for all crawled pages
     """
+    def log(message, log_type='info'):
+        """Helper to both print and emit logs"""
+        print(message)
+        if emit_log:
+            emit_log('log', {'message': message, 'type': log_type})
+
     # Initialize data structures
     queue = deque([normalize_url(starting_url)])
     visited = set()
     results = []
     base_domain = get_domain(starting_url)
     page_count = 0
-    
-    print(f"\nStarting BFS Crawler")
-    print(f"Base URL: {starting_url}")
-    print(f"Base Domain: {base_domain}")
-    print(f"Max Pages: {max_pages}\n")
-    
+
+    log(f"Starting BFS Crawler", 'info')
+    log(f"Base URL: {starting_url}", 'info')
+    log(f"Base Domain: {base_domain}", 'info')
+    log(f"Max Pages: {max_pages}", 'info')
+
     while queue and page_count < max_pages:
         current_url = queue.popleft()
-        
+
         # Skip if already visited
         if current_url in visited:
             continue
-        
+
         visited.add(current_url)
         page_count += 1
-        
-        print(f"{'='*60}")
-        print(f"Analyzing Page {page_count}/{max_pages}")
-        print(f"URL: {current_url}")
-        print(f"{'='*60}")
-        
+
+        log(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", 'divider')
+        log(f"Analyzing Page {page_count}/{max_pages}", 'progress')
+        log(f"URL: {current_url}", 'url')
+
         try:
             # Extract navigation links
-            print("Extracting navigation links...")
+            log("Extracting navigation links...", 'info')
             extracted = await extract_redirects(current_url)
-            
+
             # Validate page (CTA and theme analysis)
-            print("Validating CTA and theme...")
+            log("Validating CTA and theme...", 'info')
             validation = await validate_page(current_url, audit_config)
-            
+
             # Process extracted links
             if extracted and 'posts' in extracted:
                 new_links = [link['url'] for link in extracted['posts']]
-                print(f"Found {len(new_links)} links")
-                
+                log(f"Found {len(new_links)} links", 'info')
+
                 # Filter and add valid links to queue
                 added_count = 0
                 for link in new_links:
                     normalized_link = normalize_url(link)
-                    
+
                     # Check if valid and not already visited/queued
-                    if (is_valid_link(normalized_link, base_domain) and 
-                        normalized_link not in visited and 
+                    if (is_valid_link(normalized_link, base_domain) and
+                        normalized_link not in visited and
                         normalized_link not in queue):
                         queue.append(normalized_link)
                         added_count += 1
-                
-                print(f"Added {added_count} new links to queue")
-            
+
+                log(f"Added {added_count} new links to queue", 'success')
+
             # Store results
             results.append({
                 'url': current_url,
                 'page_number': page_count,
                 'validation': validation
             })
-            
-            print(f"Page {page_count} analysis complete\n")
-            
+
+            log(f"Page {page_count} analysis complete", 'success')
+
         except Exception as e:
-            print(f"ERROR analyzing {current_url}: {str(e)}")
-            print(f"Skipping to next page...\n")
+            log(f"ERROR analyzing {current_url}: {str(e)}", 'error')
+            log(f"Skipping to next page...", 'warning')
             # Store error result
             results.append({
                 'url': current_url,
                 'page_number': page_count,
                 'error': str(e)
             })
-    
+
     # Summary
-    print(f"\n{'='*60}")
-    print(f"Crawling Complete")
-    print(f"{'='*60}")
-    print(f"Total Pages Analyzed: {page_count}")
-    print(f"URLs in Queue (not analyzed): {len(queue)}")
-    print(f"Successfully Analyzed: {len([r for r in results if 'error' not in r])}")
-    print(f"Errors: {len([r for r in results if 'error' in r])}")
-    print(f"{'='*60}\n")
-    
+    log(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", 'divider')
+    log(f"Crawling Complete!", 'success')
+    log(f"Total Pages Analyzed: {page_count}", 'info')
+    log(f"URLs in Queue (not analyzed): {len(queue)}", 'info')
+    log(f"Successfully Analyzed: {len([r for r in results if 'error' not in r])}", 'info')
+    log(f"Errors: {len([r for r in results if 'error' in r])}", 'info')
+
     return {
         'total_pages_analyzed': page_count,
         'urls_analyzed': list(visited),
