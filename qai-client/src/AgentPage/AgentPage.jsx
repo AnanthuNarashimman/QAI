@@ -55,6 +55,7 @@ function AgentPage() {
         progress: 'color: #60a5fa; font-weight: bold',
         url: 'color: #a78bfa',
         divider: 'color: #444',
+        agent: 'color: #facc15',
       };
       console.log(`%c[Agent] ${data.message}`, logStyle[data.type] || 'color: #888');
     });

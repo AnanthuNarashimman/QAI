@@ -2,10 +2,41 @@ from browser_use import Agent, ChatGoogle, Controller
 from dotenv import load_dotenv
 import asyncio
 import json
+import logging
 from pydantic import BaseModel, Field
 from typing import List
 
 load_dotenv()
+
+
+class SocketIOLogHandler(logging.Handler):
+    """Custom log handler that forwards browser-use logs to the frontend via SocketIO"""
+    def __init__(self, emit_fn):
+        super().__init__()
+        self.emit_fn = emit_fn
+
+    # Only forward messages containing these patterns
+    ALLOW_PATTERNS = [
+        '📍 Step',
+        'Eval:',
+        'Memory:',
+        'Next goal:',
+        '▶️',
+        '🔗 Navigated',
+        '🔍 Scrolled',
+        '📄  Final Result',
+        '✅ Task completed',
+        '⚠️ Page readiness',
+    ]
+
+    def emit(self, record):
+        message = record.getMessage()
+        if not message.strip():
+            return
+        # Only forward useful agent activity logs
+        if not any(pattern in message for pattern in self.ALLOW_PATTERNS):
+            return
+        self.emit_fn('log', {'message': message, 'type': 'agent'})
 
 
 
@@ -36,13 +67,20 @@ class Values(BaseModel):
     values: list[Value]
 
 
-async def extract_redirects(url):
+async def extract_redirects(url, emit_log=None):
     # Extraction of navigation links
-    
+
+    # Attach log handler if emit_log is provided
+    handler = None
+    if emit_log:
+        handler = SocketIOLogHandler(emit_log)
+        handler.setLevel(logging.INFO)
+        logging.getLogger('browser_use').addHandler(handler)
+
     llm = ChatGoogle(model="gemini-2.5-flash-lite")
-        
+
     extraction_controller = Controller(output_model=redirects)
-    
+
     task = f"""
     Navigate to the provided {url}.
     Explore the page and identify all sections.
@@ -56,9 +94,13 @@ async def extract_redirects(url):
     Do not click any buttons that navigates away from the site.
     Stay on the domain of the provided url {url}
     """
-    
+
     agent = Agent(task=task, llm=llm, controller=extraction_controller)
     extraction_result = await agent.run()
+
+    # Remove handler to avoid duplicate logs on next call
+    if handler:
+        logging.getLogger('browser_use').removeHandler(handler)
     
     """
     Will generate a structured output as below
@@ -75,10 +117,17 @@ async def extract_redirects(url):
     return extracted_urls
 
     
-async def validate_page(url, audit_config=None):
-    
+async def validate_page(url, audit_config=None, emit_log=None):
+
+    # Attach log handler if emit_log is provided
+    handler = None
+    if emit_log:
+        handler = SocketIOLogHandler(emit_log)
+        handler.setLevel(logging.INFO)
+        logging.getLogger('browser_use').addHandler(handler)
+
     llm = ChatGoogle(model="gemini-3-pro-preview")
-    
+
     validation_controller = Controller(output_model= Values)
     
     # Build dynamic context section if audit_config is provided
@@ -180,9 +229,13 @@ async def validate_page(url, audit_config=None):
     """
     
     agent = Agent(llm=llm, task=task, controller=validation_controller)
-    
+
     result = await agent.run()
-    
+
+    # Remove handler to avoid duplicate logs on next call
+    if handler:
+        logging.getLogger('browser_use').removeHandler(handler)
+
     validation_result = result.final_result()
     
     # Parse JSON string to dictionary if needed

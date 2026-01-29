@@ -3,7 +3,10 @@
     "allow": [
       "Bash(ls:*)",
       "Bash(npm install:*)",
-      "Bash(pip install:*)"
+      "Bash(pip install:*)",
+      "Read(//c/Users/admin/AppData/Local/Programs/Python/Python310/Lib/site-packages/**)",
+      "Bash(python:*)",
+      "Bash(find:*)"
     ]
   }
 }

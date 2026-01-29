@@ -93,11 +93,11 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
         try:
             # Extract navigation links
             log("Extracting navigation links...", 'info')
-            extracted = await extract_redirects(current_url)
+            extracted = await extract_redirects(current_url, emit_log=emit_log)
 
             # Validate page (CTA and theme analysis)
             log("Validating CTA and theme...", 'info')
-            validation = await validate_page(current_url, audit_config)
+            validation = await validate_page(current_url, audit_config, emit_log=emit_log)
 
             # Process extracted links
             if extracted and 'posts' in extracted:
