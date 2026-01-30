@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { io } from 'socket.io-client';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styles from './AgentPage.module.css';
 import Navbar from '../Components/Navbar';
 import { Sparkles, ChevronDown, Cpu, Check, Lock, PenLine, Globe, SwatchBook, BrainCog } from 'lucide-react';
@@ -9,9 +9,8 @@ function AgentPage() {
   const [url, setUrl] = useState('');
   const [maxPages, setMaxPages] = useState(1);
   const [intent, setIntent] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const socketRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleStartAudit = () => {
     // Clear previous error
@@ -28,63 +27,13 @@ function AgentPage() {
       return;
     }
 
-    setIsLoading(true);
-
-    // Connect to WebSocket
-    const socket = io('http://localhost:5000');
-    socketRef.current = socket;
-
-    socket.on('connect', () => {
-      console.log('[WebSocket] Connected to server');
-
-      // Start analysis via WebSocket
-      socket.emit('start_analysis', {
+    // Navigate to audit page with form data
+    navigate('/audit', {
+      state: {
         url: url,
         max_pages: maxPages,
         user_intent: intent,
-      });
-    });
-
-    // Listen for log messages
-    socket.on('log', (data) => {
-      const logStyle = {
-        info: 'color: #888',
-        success: 'color: #4ade80',
-        error: 'color: #f87171',
-        warning: 'color: #fbbf24',
-        progress: 'color: #60a5fa; font-weight: bold',
-        url: 'color: #a78bfa',
-        divider: 'color: #444',
-        agent: 'color: #facc15',
-      };
-      console.log(`%c[Agent] ${data.message}`, logStyle[data.type] || 'color: #888');
-    });
-
-    // Listen for completion
-    socket.on('complete', (data) => {
-      console.log('[WebSocket] Analysis complete!');
-      console.log('Results:', data.data);
-      setIsLoading(false);
-      socket.disconnect();
-    });
-
-    // Listen for errors
-    socket.on('error', (data) => {
-      console.error('[WebSocket] Error:', data.message);
-      setError(data.message);
-      setIsLoading(false);
-      socket.disconnect();
-    });
-
-    socket.on('disconnect', () => {
-      console.log('[WebSocket] Disconnected');
-      setIsLoading(false);
-    });
-
-    socket.on('connect_error', (err) => {
-      console.error('[WebSocket] Connection error:', err);
-      setError('Failed to connect to backend. Make sure the server is running.');
-      setIsLoading(false);
+      },
     });
   };
 
@@ -172,9 +121,9 @@ function AgentPage() {
               )}
             </div>
 
-            <button className={styles.createBtn} onClick={handleStartAudit} disabled={isLoading}>
+            <button className={styles.createBtn} onClick={handleStartAudit}>
               <Sparkles size={16} />
-              {isLoading ? 'Analyzing...' : 'Start Audit'}
+              Start Audit
             </button>
           </div>
 

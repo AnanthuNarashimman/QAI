@@ -1,0 +1,543 @@
+/* ── Container ── */
+.container {
+  min-height: 100vh;
+  background-color: #e0f2f7;
+  color: #1a1a2e;
+  font-family: var(--font-primary);
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 180, 216, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 216, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(0, 180, 216, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Main ── */
+.main {
+  position: relative;
+  z-index: 1;
+  padding: 90px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+/* ── Top Bar ── */
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1a1a2e;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  border-color: #00B4D8;
+  color: #00B4D8;
+}
+
+/* ── Status Badge ── */
+.statusBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: rgba(0, 180, 216, 0.08);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  color: #00B4D8;
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00B4D8;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 180, 216, 0.4); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(0, 180, 216, 0); }
+}
+
+.doneDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+/* ── URL Display ── */
+.urlDisplay {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 180, 216, 0.1);
+  color: rgba(26, 26, 46, 0.6);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.urlDisplay:hover {
+  background: rgba(0, 180, 216, 0.08);
+  color: #00B4D8;
+  border-color: rgba(0, 180, 216, 0.2);
+}
+
+/* ── Split Layout ── */
+.splitLayout {
+  display: flex;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ══════════════════════════════════════════
+   LEFT PANEL — Timeline Activity Feed
+   ══════════════════════════════════════════ */
+.leftPanel {
+  width: 40%;
+  min-width: 340px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  box-shadow: 0 4px 40px rgba(0, 180, 216, 0.08);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+}
+
+.panelHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(0, 180, 216, 0.1);
+  color: #1a1a2e;
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.panelHeader svg {
+  color: #00B4D8;
+}
+
+/* ── Timeline ── */
+.timelineContent {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+}
+
+.timelineContent::-webkit-scrollbar {
+  width: 4px;
+}
+
+.timelineContent::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.timelineContent::-webkit-scrollbar-thumb {
+  background: rgba(0, 180, 216, 0.15);
+  border-radius: 4px;
+}
+
+/* ── Timeline Item ── */
+.timelineItem {
+  display: flex;
+  gap: 12px;
+  min-height: 28px;
+}
+
+/* ── Dot Column ── */
+.timelineDotColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 16px;
+  flex-shrink: 0;
+  padding-top: 6px;
+}
+
+.timelineDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00B4D8;
+  flex-shrink: 0;
+}
+
+.dotLarge {
+  width: 10px;
+  height: 10px;
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.15);
+}
+
+.dotSuccess {
+  background: #4ade80;
+}
+
+.dotPulse {
+  animation: dotPulseAnim 1.5s ease-in-out infinite;
+}
+
+@keyframes dotPulseAnim {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 180, 216, 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(0, 180, 216, 0); }
+}
+
+.subDash {
+  width: 6px;
+  height: 2px;
+  border-radius: 1px;
+  background: rgba(0, 180, 216, 0.25);
+  flex-shrink: 0;
+  margin-top: 8px;
+}
+
+.timelineLine {
+  flex: 1;
+  width: 1.5px;
+  background: rgba(0, 180, 216, 0.12);
+  margin: 3px 0;
+  min-height: 8px;
+}
+
+/* ══════════════════════════════════════════
+   LOG MESSAGE STYLES — Styled containers
+   ══════════════════════════════════════════ */
+
+/* ── Progress Card (section header) ── */
+.progressCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  margin: 6px 0 4px;
+  background: linear-gradient(135deg, rgba(0, 180, 216, 0.08), rgba(0, 180, 216, 0.03));
+  border: 1px solid rgba(0, 180, 216, 0.18);
+  border-radius: 10px;
+  font-family: var(--font-secondary);
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a1a2e;
+  flex: 1;
+}
+
+.progressCardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(0, 180, 216, 0.12);
+  color: #00B4D8;
+  flex-shrink: 0;
+}
+
+/* ── Success Badge ── */
+.successBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin: 2px 0;
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+  border-radius: 8px;
+  font-family: var(--font-secondary);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #16a34a;
+}
+
+.successBadge svg {
+  flex-shrink: 0;
+}
+
+/* ── URL Chip ── */
+.urlChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  margin: 2px 0;
+  background: rgba(0, 180, 216, 0.06);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: #00B4D8;
+}
+
+.urlChip svg {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ── Agent Sub-line ── */
+.agentLine {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  color: rgba(26, 26, 46, 0.45);
+  line-height: 1.5;
+  padding: 2px 0 2px 4px;
+  border-left: 2px solid rgba(0, 180, 216, 0.08);
+  margin-left: -2px;
+}
+
+/* ── Info Line ── */
+.infoLine {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  color: rgba(26, 26, 46, 0.65);
+  line-height: 1.5;
+  padding: 3px 0;
+}
+
+.infoIcon {
+  color: rgba(0, 180, 216, 0.5);
+  flex-shrink: 0;
+}
+
+.inlineSpinner {
+  animation: spin 1.2s linear infinite;
+  color: #00B4D8;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ══════════════════════════════════════════
+   RIGHT PANEL — Website Preview + Footer
+   ══════════════════════════════════════════ */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 0;
+}
+
+.previewCard {
+  flex: 1;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 40px rgba(0, 180, 216, 0.08);
+  position: relative;
+  min-height: 0;
+}
+
+.previewContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.previewFrame {
+  width: 100%;
+  height: 100%;
+  border: none;
+  transition: filter 0.4s ease;
+}
+
+.blurred {
+  filter: blur(3px) brightness(0.85);
+}
+
+/* ── Overlay ── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(224, 242, 247, 0.4);
+  backdrop-filter: blur(2px);
+}
+
+.overlayContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 40px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 180, 216, 0.12);
+}
+
+.overlaySpinner {
+  color: #00B4D8;
+  animation: spin 1.5s linear infinite;
+}
+
+.overlayText {
+  color: #1a1a2e;
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.overlaySubtext {
+  color: rgba(26, 26, 46, 0.5);
+  font-family: var(--font-secondary);
+  font-size: 13px;
+}
+
+/* ── Preview Footer (Progress + Stop) ── */
+.previewFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0, 180, 216, 0.06);
+  flex-shrink: 0;
+}
+
+.footerProgress {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.footerProgressBar {
+  flex: 1;
+  max-width: 280px;
+  height: 5px;
+  border-radius: 5px;
+  background: rgba(0, 180, 216, 0.12);
+  overflow: hidden;
+}
+
+.footerProgressFill {
+  height: 100%;
+  border-radius: 5px;
+  background: linear-gradient(90deg, #00B4D8, #48cae4);
+  transition: width 0.6s ease;
+}
+
+.footerProgressText {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(26, 26, 46, 0.5);
+  white-space: nowrap;
+}
+
+/* ── Stop Button ── */
+.stopBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  background: rgba(255, 255, 255, 0.9);
+  color: #dc2626;
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.stopBtn:hover {
+  background: rgba(220, 38, 38, 0.06);
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.stopBtnDisabled {
+  border-color: rgba(26, 26, 46, 0.15);
+  color: rgba(26, 26, 46, 0.35);
+  cursor: default;
+}
+
+.stopBtnDisabled:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(26, 26, 46, 0.15);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .splitLayout {
+    flex-direction: column;
+  }
+
+  .leftPanel {
+    width: 100%;
+    min-width: unset;
+    max-height: 50vh;
+  }
+
+  .topBar {
+    flex-wrap: wrap;
+  }
+
+  .urlDisplay {
+    display: none;
+  }
+}
