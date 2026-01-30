@@ -323,15 +323,88 @@
   opacity: 0.6;
 }
 
-/* ── Agent Sub-line ── */
-.agentLine {
+/* ── Step Badge ── */
+.stepBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  margin: 4px 0 2px;
+  background: rgba(0, 180, 216, 0.06);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #00B4D8;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.stepBadge svg {
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+/* ── Thought Bubble ── */
+.thoughtBubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 7px 12px;
+  margin: 2px 0;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.06), rgba(139, 92, 246, 0.02));
+  border: 1px solid rgba(139, 92, 246, 0.14);
+  border-radius: 8px;
+  font-family: var(--font-secondary);
+  font-size: 12.5px;
+  font-weight: 400;
+  color: rgba(26, 26, 46, 0.7);
+  line-height: 1.5;
+  font-style: italic;
+  flex: 1;
+}
+
+.thoughtIcon {
+  color: rgba(139, 92, 246, 0.55);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ── Action Line ── */
+.actionLine {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  color: rgba(26, 26, 46, 0.55);
+  line-height: 1.5;
+  padding: 2px 0;
+}
+
+.actionIcon {
+  color: #00B4D8;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+/* ── Result Line ── */
+.resultLine {
+  display: flex;
+  align-items: center;
+  gap: 7px;
   font-family: var(--font-secondary);
   font-size: 12px;
   color: rgba(26, 26, 46, 0.45);
   line-height: 1.5;
-  padding: 2px 0 2px 4px;
-  border-left: 2px solid rgba(0, 180, 216, 0.08);
-  margin-left: -2px;
+  padding: 2px 0;
+}
+
+.resultIcon {
+  color: #4ade80;
+  flex-shrink: 0;
+  opacity: 0.7;
 }
 
 /* ── Info Line ── */

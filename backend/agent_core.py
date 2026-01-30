@@ -3,40 +3,127 @@ from dotenv import load_dotenv
 import asyncio
 import json
 import logging
+import re
 from pydantic import BaseModel, Field
 from typing import List
 
 load_dotenv()
 
+# Strip ANSI escape codes from strings
+ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
+
+def strip_ansi(text):
+    return ANSI_RE.sub('', text)
+
 
 class SocketIOLogHandler(logging.Handler):
-    """Custom log handler that forwards browser-use logs to the frontend via SocketIO"""
+    """Custom log handler that transforms raw browser-use logs into clean agentic messages"""
     def __init__(self, emit_fn):
         super().__init__()
         self.emit_fn = emit_fn
 
-    # Only forward messages containing these patterns
-    ALLOW_PATTERNS = [
-        '📍 Step',
-        'Eval:',
-        'Memory:',
-        'Next goal:',
-        '▶️',
-        '🔗 Navigated',
-        '🔍 Scrolled',
-        '📄  Final Result',
-        '✅ Task completed',
-        '⚠️ Page readiness',
-    ]
-
     def emit(self, record):
-        message = record.getMessage()
-        if not message.strip():
+        raw = record.getMessage()
+        if not raw.strip():
             return
-        # Only forward useful agent activity logs
-        if not any(pattern in message for pattern in self.ALLOW_PATTERNS):
+
+        message = strip_ansi(raw).strip()
+
+        # ── Step counter ──
+        if '📍 Step' in raw:
+            # Extract step number: "📍 Step 3:" → "Step 3"
+            match = re.search(r'Step\s*(\d+)', message)
+            if match:
+                self.emit_fn('log', {
+                    'message': f'Step {match.group(1)}',
+                    'type': 'step'
+                })
             return
-        self.emit_fn('log', {'message': message, 'type': 'agent'})
+
+        # ── Agent's next goal (thought bubble) ──
+        if 'Next goal:' in raw:
+            thought = message.split('Next goal:', 1)[-1].strip()
+            if thought:
+                self.emit_fn('log', {
+                    'message': thought,
+                    'type': 'thought'
+                })
+            return
+
+        # ── Actions performed ──
+        if '▶️' in raw:
+            action = message.replace('▶️', '').strip()
+            # Parse action type
+            if 'navigate' in action.lower():
+                url_match = re.search(r'url:\s*(\S+)', action)
+                url = url_match.group(1).rstrip(',') if url_match else ''
+                self.emit_fn('log', {
+                    'message': f'Navigating to {url}' if url else 'Navigating...',
+                    'type': 'action'
+                })
+            elif 'scroll' in action.lower():
+                down = 'down' in action.lower()
+                pages_match = re.search(r'pages:\s*([\d.]+)', action)
+                pages = pages_match.group(1) if pages_match else ''
+                direction = 'down' if down else 'up'
+                self.emit_fn('log', {
+                    'message': f'Scrolling {direction} {pages + " pages" if pages else ""}',
+                    'type': 'action'
+                })
+            elif 'extract' in action.lower():
+                self.emit_fn('log', {
+                    'message': 'Extracting page content',
+                    'type': 'action'
+                })
+            elif 'wait' in action.lower():
+                sec_match = re.search(r'seconds:\s*(\d+)', action)
+                sec = sec_match.group(1) if sec_match else ''
+                self.emit_fn('log', {
+                    'message': f'Waiting {sec + "s" if sec else ""} for page to load',
+                    'type': 'action'
+                })
+            elif 'done' in action.lower():
+                self.emit_fn('log', {
+                    'message': 'Task completed',
+                    'type': 'action'
+                })
+            # Skip write_file, replace_file, and other internal actions
+            return
+
+        # ── Navigation result ──
+        if '🔗 Navigated' in raw:
+            url = message.replace('🔗 Navigated to', '').strip()
+            self.emit_fn('log', {
+                'message': url,
+                'type': 'url'
+            })
+            return
+
+        # ── Scroll result ──
+        if '🔍 Scrolled' in raw:
+            self.emit_fn('log', {
+                'message': message.replace('🔍 ', ''),
+                'type': 'result'
+            })
+            return
+
+        # ── Task completed ──
+        if '✅ Task completed' in raw:
+            self.emit_fn('log', {
+                'message': 'Agent finished this task',
+                'type': 'success'
+            })
+            return
+
+        # ── Page readiness warning ──
+        if '⚠️ Page readiness' in raw:
+            self.emit_fn('log', {
+                'message': 'Waiting for page to become ready...',
+                'type': 'action'
+            })
+            return
+
+        # Skip everything else (Eval, Memory, write_file, replace_file, etc.)
 
 
 
