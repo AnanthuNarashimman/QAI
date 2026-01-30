@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 import asyncio
+import threading
 import requests
 from urllib.parse import urlparse
 from bfs_crawler import bfs_crawler
@@ -12,6 +13,9 @@ CORS(app)
 
 # Initialize SocketIO with CORS support
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+
+# Track active analysis sessions: sid -> threading.Event (stop flag)
+active_sessions = {}
 
 
 def validate_url(url):
@@ -70,8 +74,14 @@ def handle_start_analysis(data):
     # Capture the client's session ID for emitting outside of request context
     sid = request.sid
 
+    # Create a stop flag for this session
+    stop_flag = threading.Event()
+    active_sessions[sid] = stop_flag
+
     def emit_to_client(event, payload):
         """Wrapper that emits to the specific client using their session ID"""
+        if stop_flag.is_set():
+            return
         socketio.emit(event, payload, room=sid)
 
     try:
@@ -110,8 +120,12 @@ def handle_start_analysis(data):
             else:
                 emit_to_client('log', {'message': 'Warning: Failed to parse intent, continuing without it...', 'type': 'warning'})
 
-        # Run the BFS crawler with emit function for streaming logs
-        results = asyncio.run(bfs_crawler(url, max_pages, audit_config, emit_log=emit_to_client))
+        # Run the BFS crawler with emit function and stop flag for cancellation
+        results = asyncio.run(bfs_crawler(url, max_pages, audit_config, emit_log=emit_to_client, stop_flag=stop_flag))
+
+        if stop_flag.is_set():
+            print(f"Analysis for {sid} was stopped by user.")
+            return
 
         # Add audit_config to results
         if audit_config:
@@ -121,8 +135,33 @@ def handle_start_analysis(data):
         emit_to_client('complete', {'status': 'success', 'data': results})
 
     except Exception as e:
+        if stop_flag.is_set():
+            print(f"Analysis for {sid} was stopped by user.")
+            return
         print(f"ERROR in start_analysis: {str(e)}")
         emit_to_client('error', {'message': f'Internal server error: {str(e)}'})
+    finally:
+        active_sessions.pop(sid, None)
+
+
+@socketio.on('stop_analysis')
+def handle_stop_analysis():
+    """WebSocket handler for stopping a running analysis"""
+    sid = request.sid
+    stop_flag = active_sessions.get(sid)
+    if stop_flag:
+        print(f"Stop requested by client {sid}")
+        stop_flag.set()
+
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Clean up when a client disconnects"""
+    sid = request.sid
+    stop_flag = active_sessions.get(sid)
+    if stop_flag:
+        stop_flag.set()
+    active_sessions.pop(sid, None)
 
 
 @app.route('/api/analyze', methods=['POST'])

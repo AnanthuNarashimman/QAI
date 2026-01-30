@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
 import Navbar from '../Components/Navbar';
-import { ArrowLeft, Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, MousePointerClick, Footprints, Hash } from 'lucide-react';
+import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X } from 'lucide-react';
 
 function getProgressIcon(message) {
   if (message.includes('Page 1')) return <Compass size={14} />;
@@ -13,10 +13,10 @@ function getProgressIcon(message) {
 
 function AuditPage() {
   const location = useLocation();
-  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
   const [isStopped, setIsStopped] = useState(false);
   const [isRunning, setIsRunning] = useState(true);
+  const [showStopModal, setShowStopModal] = useState(false);
   const logsEndRef = useRef(null);
   const socketRef = useRef(null);
 
@@ -24,9 +24,20 @@ function AuditPage() {
   const maxPages = location.state?.max_pages || 3;
   const userIntent = location.state?.user_intent || '';
 
-  // Derive pages analyzed from progress logs
-  const pagesAnalyzed = logs.filter(l => l.type === 'progress').length;
-  const progressPercent = maxPages > 0 ? Math.min((pagesAnalyzed / maxPages) * 100, 100) : 0;
+  // Derive progress: each completed page = full segment, current page gets partial fill from steps
+  const pagesStarted = logs.filter(l => l.type === 'progress').length;
+  const pagesCompleted = logs.filter(l => l.message && l.message.includes('analysis complete')).length;
+  const stepsInCurrentPage = (() => {
+    // Count steps since the last 'progress' log
+    const lastProgressIdx = logs.map((l, i) => l.type === 'progress' ? i : -1).filter(i => i >= 0).pop() ?? -1;
+    return logs.slice(lastProgressIdx + 1).filter(l => l.type === 'step').length;
+  })();
+  // Each page is one segment. Within a segment, steps fill it gradually (cap at ~8 steps estimate)
+  const completedPercent = (pagesCompleted / maxPages) * 100;
+  const currentPagePercent = pagesStarted > pagesCompleted
+    ? (Math.min(stepsInCurrentPage / 8, 0.9) / maxPages) * 100
+    : 0;
+  const progressPercent = maxPages > 0 ? Math.min(completedPercent + currentPagePercent, 100) : 0;
 
   // Connect to WebSocket on mount
   useEffect(() => {
@@ -79,11 +90,22 @@ function AuditPage() {
   }, [logs]);
 
   const handleStop = () => {
+    setShowStopModal(true);
+  };
+
+  const confirmStop = () => {
+    setShowStopModal(false);
     setIsStopped(true);
     setIsRunning(false);
+    setLogs(prev => [...prev, { message: 'Agent stopped by user', type: 'stopped' }]);
     if (socketRef.current) {
+      socketRef.current.emit('stop_analysis');
       socketRef.current.disconnect();
     }
+  };
+
+  const cancelStop = () => {
+    setShowStopModal(false);
   };
 
   const isLastLog = (index) => index === logs.length - 1 && isRunning;
@@ -201,6 +223,21 @@ function AuditPage() {
       );
     }
 
+    // Stopped badge
+    if (log.type === 'stopped') {
+      return (
+        <div key={index} className={styles.timelineItem}>
+          <div className={styles.timelineDotColumn}>
+            <span className={`${styles.timelineDot} ${styles.dotStopped}`} />
+          </div>
+          <div className={styles.stoppedBadge}>
+            <Square size={11} />
+            <span>{log.message}</span>
+          </div>
+        </div>
+      );
+    }
+
     // Error badge
     if (log.type === 'error') {
       return (
@@ -237,21 +274,21 @@ function AuditPage() {
 
       <main className={styles.main}>
         <div className={styles.topBar}>
-          <button className={styles.backBtn} onClick={() => navigate('/')}>
-            <ArrowLeft size={16} />
-            <span>Back</span>
-          </button>
-
-          <div className={styles.statusBadge}>
+          <div className={`${styles.statusBadge} ${isStopped ? styles.statusStopped : ''}`}>
             {isRunning ? (
               <>
                 <span className={styles.pulseDot} />
                 <span>Agent Running</span>
               </>
+            ) : isStopped ? (
+              <>
+                <span className={styles.stoppedDot} />
+                <span>Stopped</span>
+              </>
             ) : (
               <>
                 <span className={styles.doneDot} />
-                <span>{isStopped ? 'Stopped' : 'Complete'}</span>
+                <span>Complete</span>
               </>
             )}
           </div>
@@ -318,7 +355,7 @@ function AuditPage() {
                   />
                 </div>
                 <span className={styles.footerProgressText}>
-                  Page {pagesAnalyzed} of {maxPages}
+                  Page {pagesStarted || 0} of {maxPages}
                 </span>
               </div>
               <button
@@ -333,6 +370,32 @@ function AuditPage() {
           </div>
         </div>
       </main>
+
+      {showStopModal && (
+        <div className={styles.modalBackdrop} onClick={cancelStop}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <button className={styles.modalClose} onClick={cancelStop}>
+              <X size={16} />
+            </button>
+            <div className={styles.modalIcon}>
+              <AlertTriangle size={28} />
+            </div>
+            <h3 className={styles.modalTitle}>Stop Agent?</h3>
+            <p className={styles.modalText}>
+              This will stop the audit immediately and discard all findings collected so far. This action cannot be undone.
+            </p>
+            <div className={styles.modalActions}>
+              <button className={styles.modalCancelBtn} onClick={cancelStop}>
+                Continue Audit
+              </button>
+              <button className={styles.modalConfirmBtn} onClick={confirmStop}>
+                <Square size={14} />
+                Stop Agent
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

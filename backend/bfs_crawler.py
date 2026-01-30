@@ -45,7 +45,7 @@ def is_valid_link(url, base_domain):
     return link_domain == base_domain
 
 
-async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=None):
+async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=None, stop_flag=None):
     """
     Crawl website using BFS, analyzing each page for CTA and theme consistency.
 
@@ -54,14 +54,18 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
         max_pages: Maximum number of pages to analyze (default: 5)
         audit_config: Optional dict with user's intended design configuration
         emit_log: Optional SocketIO emit function for streaming logs to frontend
+        stop_flag: Optional threading.Event that signals the analysis should stop
 
     Returns:
         Dictionary containing analysis results for all crawled pages
     """
+    def is_stopped():
+        return stop_flag and stop_flag.is_set()
+
     def log(message, log_type='info'):
         """Helper to both print and emit logs"""
         print(message)
-        if emit_log:
+        if emit_log and not is_stopped():
             emit_log('log', {'message': message, 'type': log_type})
 
     # Initialize data structures
@@ -77,6 +81,10 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
     log(f"Max Pages: {max_pages}", 'info')
 
     while queue and page_count < max_pages:
+        if is_stopped():
+            log("Analysis stopped by user.", 'info')
+            break
+
         current_url = queue.popleft()
 
         # Skip if already visited
@@ -95,9 +103,15 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
             log("Extracting navigation links...", 'info')
             extracted = await extract_redirects(current_url, emit_log=emit_log)
 
+            if is_stopped():
+                break
+
             # Validate page (CTA and theme analysis)
             log("Validating CTA and theme...", 'info')
             validation = await validate_page(current_url, audit_config, emit_log=emit_log)
+
+            if is_stopped():
+                break
 
             # Process extracted links
             if extracted and 'posts' in extracted:
