@@ -154,7 +154,7 @@ class Values(BaseModel):
     values: list[Value]
 
 
-async def extract_redirects(url, emit_log=None):
+async def extract_redirects(url, emit_log=None, stop_flag=None):
     # Extraction of navigation links
 
     # Attach log handler if emit_log is provided
@@ -163,6 +163,12 @@ async def extract_redirects(url, emit_log=None):
         handler = SocketIOLogHandler(emit_log)
         handler.setLevel(logging.INFO)
         logging.getLogger('browser_use').addHandler(handler)
+
+    # Build stop callback if stop_flag is provided
+    stop_callback = None
+    if stop_flag:
+        async def stop_callback():
+            return stop_flag.is_set()
 
     llm = ChatGoogle(model="gemini-2.5-flash-lite")
 
@@ -182,8 +188,16 @@ async def extract_redirects(url, emit_log=None):
     Stay on the domain of the provided url {url}
     """
 
-    agent = Agent(task=task, llm=llm, controller=extraction_controller)
-    extraction_result = await agent.run()
+    agent = Agent(task=task, llm=llm, controller=extraction_controller, register_should_stop_callback=stop_callback)
+    try:
+        extraction_result = await agent.run()
+    except InterruptedError:
+        if handler:
+            logging.getLogger('browser_use').removeHandler(handler)
+        await agent.close()
+        return None
+    finally:
+        await agent.close()
 
     # Remove handler to avoid duplicate logs on next call
     if handler:
@@ -204,7 +218,7 @@ async def extract_redirects(url, emit_log=None):
     return extracted_urls
 
     
-async def validate_page(url, audit_config=None, emit_log=None):
+async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
 
     # Attach log handler if emit_log is provided
     handler = None
@@ -212,6 +226,12 @@ async def validate_page(url, audit_config=None, emit_log=None):
         handler = SocketIOLogHandler(emit_log)
         handler.setLevel(logging.INFO)
         logging.getLogger('browser_use').addHandler(handler)
+
+    # Build stop callback if stop_flag is provided
+    stop_callback = None
+    if stop_flag:
+        async def stop_callback():
+            return stop_flag.is_set()
 
     llm = ChatGoogle(model="gemini-3-pro-preview")
 
@@ -315,20 +335,28 @@ async def validate_page(url, audit_config=None, emit_log=None):
     ⚠️ If scores are 0 with no reasoning, go back and re-analyze.
     """
     
-    agent = Agent(llm=llm, task=task, controller=validation_controller)
+    agent = Agent(llm=llm, task=task, controller=validation_controller, register_should_stop_callback=stop_callback)
 
-    result = await agent.run()
+    try:
+        result = await agent.run()
+    except InterruptedError:
+        if handler:
+            logging.getLogger('browser_use').removeHandler(handler)
+        await agent.close()
+        return None
+    finally:
+        await agent.close()
 
     # Remove handler to avoid duplicate logs on next call
     if handler:
         logging.getLogger('browser_use').removeHandler(handler)
 
     validation_result = result.final_result()
-    
+
     # Parse JSON string to dictionary if needed
     if isinstance(validation_result, str):
         validation_result = json.loads(validation_result)
-    
+
     return validation_result
     
 

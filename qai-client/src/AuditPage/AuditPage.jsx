@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
 import Navbar from '../Components/Navbar';
@@ -20,9 +20,14 @@ function AuditPage() {
   const logsEndRef = useRef(null);
   const socketRef = useRef(null);
 
-  const auditUrl = location.state?.url || 'https://cubeaisolutions.com';
+  const auditUrl = location.state?.url;
   const maxPages = location.state?.max_pages || 3;
   const userIntent = location.state?.user_intent || '';
+
+  // Redirect to home if no state was passed (direct navigation to /audit)
+  if (!auditUrl) {
+    return <Navigate to="/" replace />;
+  }
 
   // Derive progress: each completed page = full segment, current page gets partial fill from steps
   const pagesStarted = logs.filter(l => l.type === 'progress').length;

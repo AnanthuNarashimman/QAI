@@ -101,14 +101,14 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
         try:
             # Extract navigation links
             log("Extracting navigation links...", 'info')
-            extracted = await extract_redirects(current_url, emit_log=emit_log)
+            extracted = await extract_redirects(current_url, emit_log=emit_log, stop_flag=stop_flag)
 
             if is_stopped():
                 break
 
             # Validate page (CTA and theme analysis)
             log("Validating CTA and theme...", 'info')
-            validation = await validate_page(current_url, audit_config, emit_log=emit_log)
+            validation = await validate_page(current_url, audit_config, emit_log=emit_log, stop_flag=stop_flag)
 
             if is_stopped():
                 break
