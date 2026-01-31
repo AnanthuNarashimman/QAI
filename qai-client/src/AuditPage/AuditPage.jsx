@@ -3,7 +3,7 @@ import { useLocation, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X } from 'lucide-react';
+import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool } from 'lucide-react';
 
 function getProgressIcon(message) {
   if (message.includes('Page 1')) return <Compass size={14} />;
@@ -330,24 +330,60 @@ function AuditPage() {
 
           <div className={styles.rightPanel}>
             <div className={styles.previewCard}>
-              <div className={styles.previewContainer}>
-                <iframe
-                  src={auditUrl}
-                  className={`${styles.previewFrame} ${isRunning ? styles.blurred : ''}`}
-                  title="Website Preview"
-                  sandbox="allow-scripts allow-same-origin"
-                />
-                {isRunning && (
-                  <div className={styles.overlay}>
-                    <div className={styles.overlayContent}>
-                      <Loader size={28} className={styles.overlaySpinner} />
-                      <span className={styles.overlayText}>Analyzing...</span>
-                      <span className={styles.overlaySubtext}>
-                        Agent is auditing this page
-                      </span>
+              <div className={styles.macWindow}>
+                <div className={styles.macTitleBar}>
+                  <span className={`${styles.macDot} ${styles.macDotRed}`} />
+                  <span className={`${styles.macDot} ${styles.macDotYellow}`} />
+                  <span className={`${styles.macDot} ${styles.macDotGreen}`} />
+                  <span className={styles.macTitle}>Website Audit</span>
+                </div>
+                <div className={styles.macBody}>
+                  {/* Nav skeleton */}
+                  <div className={styles.skelNav}>
+                    <div className={`${styles.skelBlock} ${styles.skelLogo}`} />
+                    <div className={styles.skelNavLinks}>
+                      <div className={`${styles.skelBlock} ${styles.skelNavLink}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelNavLink}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelNavLink}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelNavBtn}`} />
                     </div>
                   </div>
-                )}
+                  {/* Hero skeleton */}
+                  <div className={styles.skelHero}>
+                    <div className={`${styles.skelBlock} ${styles.skelHeading}`} />
+                    <div className={`${styles.skelBlock} ${styles.skelSubheading}`} />
+                    <div className={styles.skelHeroBtns}>
+                      <div className={`${styles.skelBlock} ${styles.skelBtn}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelBtnOutline}`} />
+                    </div>
+                  </div>
+                  {/* Cards skeleton */}
+                  <div className={styles.skelCards}>
+                    <div className={styles.skelCard}>
+                      <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
+                    </div>
+                    <div className={styles.skelCard}>
+                      <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
+                    </div>
+                    <div className={styles.skelCard}>
+                      <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
+                      <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
+                    </div>
+                  </div>
+                  {/* Footer skeleton */}
+                  <div className={styles.skelFooter}>
+                    <div className={`${styles.skelBlock} ${styles.skelFooterLine}`} />
+                  </div>
+                  {/* Animated pen cursor */}
+                  <div className={styles.penCursor}>
+                    <PenTool size={18} />
+                  </div>
+                </div>
               </div>
             </div>
 
