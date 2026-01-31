@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool } from 'lucide-react';
+import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool, FileText } from 'lucide-react';
 
 function getProgressIcon(message) {
   if (message.includes('Page 1')) return <Compass size={14} />;
@@ -13,10 +13,12 @@ function getProgressIcon(message) {
 
 function AuditPage() {
   const location = useLocation();
+  const navigate = useNavigate();
   const [logs, setLogs] = useState([]);
   const [isStopped, setIsStopped] = useState(false);
   const [isRunning, setIsRunning] = useState(true);
   const [showStopModal, setShowStopModal] = useState(false);
+  const [auditResults, setAuditResults] = useState(null);
   const logsEndRef = useRef(null);
   const socketRef = useRef(null);
 
@@ -66,7 +68,7 @@ function AuditPage() {
 
     socket.on('complete', (data) => {
       setLogs(prev => [...prev, { message: 'Analysis complete!', type: 'success' }]);
-      console.log('Results:', data.data);
+      setAuditResults(data.data);
       setIsRunning(false);
     });
 
@@ -337,7 +339,7 @@ function AuditPage() {
                   <span className={`${styles.macDot} ${styles.macDotGreen}`} />
                   <span className={styles.macTitle}>Website Audit</span>
                 </div>
-                <div className={styles.macBody}>
+                <div className={`${styles.macBody} ${isStopped ? styles.macBodyStopped : ''}`}>
                   {/* Nav skeleton */}
                   <div className={styles.skelNav}>
                     <div className={`${styles.skelBlock} ${styles.skelLogo}`} />
@@ -380,9 +382,18 @@ function AuditPage() {
                     <div className={`${styles.skelBlock} ${styles.skelFooterLine}`} />
                   </div>
                   {/* Animated pen cursor */}
-                  <div className={styles.penCursor}>
-                    <PenTool size={18} />
-                  </div>
+                  {!isStopped && (
+                    <div className={styles.penCursor}>
+                      <PenTool size={18} />
+                    </div>
+                  )}
+                  {/* Stopped overlay */}
+                  {isStopped && (
+                    <div className={styles.stoppedOverlay}>
+                      <Square size={28} />
+                      <span>Stopped</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -399,14 +410,25 @@ function AuditPage() {
                   Page {pagesStarted || 0} of {maxPages}
                 </span>
               </div>
-              <button
-                className={`${styles.stopBtn} ${!isRunning ? styles.stopBtnDisabled : ''}`}
-                onClick={handleStop}
-                disabled={!isRunning}
-              >
-                <Square size={14} />
-                <span>{isRunning ? 'Stop Agent' : (isStopped ? 'Stopped' : 'Done')}</span>
-              </button>
+              <div className={styles.footerButtons}>
+                {auditResults && !isStopped && (
+                  <button
+                    className={styles.generateReportBtn}
+                    onClick={() => navigate('/report', { state: { results: auditResults } })}
+                  >
+                    <FileText size={14} />
+                    <span>Generate Report</span>
+                  </button>
+                )}
+                <button
+                  className={`${styles.stopBtn} ${!isRunning ? styles.stopBtnDisabled : ''}`}
+                  onClick={handleStop}
+                  disabled={!isRunning}
+                >
+                  <Square size={14} />
+                  <span>{isRunning ? 'Stop Agent' : (isStopped ? 'Stopped' : 'Done')}</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -1,0 +1,420 @@
+/* ── Container ── */
+.container {
+  min-height: 100vh;
+  background-color: #e0f2f7;
+  color: #1a1a2e;
+  font-family: var(--font-primary);
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 180, 216, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 216, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.container::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 100%, rgba(0, 180, 216, 0.08) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Main ── */
+.main {
+  position: relative;
+  z-index: 1;
+  padding: 100px 40px 60px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ── Report Content (PDF capture target) ── */
+.reportContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ══════════════════════════════════════════
+   HEADER CARD
+   ══════════════════════════════════════════ */
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 28px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  box-shadow: 0 4px 40px rgba(0, 180, 216, 0.08);
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.siteTitle {
+  font-family: var(--font-primary);
+  font-size: 26px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.auditDate {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  color: rgba(26, 26, 46, 0.45);
+}
+
+.configTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.configTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 500;
+  background: rgba(0, 180, 216, 0.06);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  color: rgba(26, 26, 46, 0.6);
+}
+
+.configTag svg {
+  color: #00B4D8;
+  opacity: 0.6;
+  flex-shrink: 0;
+}
+
+.headerRight {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ── */
+.downloadBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  background: #00B4D8;
+  color: #ffffff;
+  font-family: var(--font-secondary);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 10px rgba(0, 180, 216, 0.35);
+}
+
+.downloadBtn:hover {
+  background: #0096c7;
+  box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+}
+
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  color: rgba(26, 26, 46, 0.6);
+  font-family: var(--font-secondary);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backBtn:hover {
+  border-color: #00B4D8;
+  color: #00B4D8;
+}
+
+/* ══════════════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════════════ */
+.section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  box-shadow: 0 4px 40px rgba(0, 180, 216, 0.08);
+  padding: 24px 28px;
+}
+
+.sectionTitle {
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionTitle svg {
+  color: #00B4D8;
+}
+
+/* ══════════════════════════════════════════
+   SCORE GAUGES
+   ══════════════════════════════════════════ */
+.scoresRow {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  padding: 20px 0 10px;
+}
+
+.gaugeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.gaugeScore {
+  font-family: var(--font-primary);
+  font-size: 30px;
+  font-weight: 700;
+  fill: #1a1a2e;
+}
+
+.gaugeLabel {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  fill: rgba(26, 26, 46, 0.35);
+}
+
+.gaugeName {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(26, 26, 46, 0.6);
+}
+
+/* ══════════════════════════════════════════
+   PAGE BREAKDOWN
+   ══════════════════════════════════════════ */
+.pageCard {
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 180, 216, 0.12);
+  background: rgba(0, 180, 216, 0.03);
+  margin-bottom: 10px;
+}
+
+.pageCard:last-child {
+  margin-bottom: 0;
+}
+
+.pageCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.pageCardHeader svg {
+  color: #00B4D8;
+  flex-shrink: 0;
+}
+
+.pageUrl {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #00B4D8;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.pageUrl:hover {
+  opacity: 0.7;
+}
+
+.pageScores {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.pageMiniScore {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 180, 216, 0.12);
+  color: rgba(26, 26, 46, 0.65);
+}
+
+.pageMiniScoreLabel {
+  font-weight: 500;
+  color: rgba(26, 26, 46, 0.4);
+  margin-right: 2px;
+}
+
+/* ══════════════════════════════════════════
+   ISSUE CARDS
+   ══════════════════════════════════════════ */
+.issueGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.issueCard {
+  padding: 18px 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  background: rgba(255, 255, 255, 0.6);
+  transition: border-color 0.2s ease;
+}
+
+.issueCard:hover {
+  border-color: rgba(0, 180, 216, 0.35);
+}
+
+.issueCardHeader {
+  margin-bottom: 14px;
+}
+
+.issueElementBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 8px;
+  background: rgba(0, 180, 216, 0.08);
+  color: #00B4D8;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.issueElementBadge svg {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.issueBody {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.issueSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.issueSectionLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: rgba(26, 26, 46, 0.4);
+}
+
+.issueLabelWarn {
+  color: rgba(245, 158, 11, 0.7);
+}
+
+.issueLabelFix {
+  color: rgba(74, 222, 128, 0.7);
+}
+
+.issueSectionText {
+  font-family: var(--font-secondary);
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: rgba(26, 26, 46, 0.7);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════
+   PRINT / PDF OVERRIDES
+   ══════════════════════════════════════════ */
+@media print {
+  .container::before,
+  .container::after {
+    display: none;
+  }
+
+  .downloadBtn,
+  .backBtn {
+    display: none;
+  }
+
+  .section {
+    break-inside: avoid;
+  }
+
+  .issueCard {
+    break-inside: avoid;
+  }
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .main {
+    padding: 90px 16px 40px;
+  }
+
+  .reportHeader {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .headerRight {
+    width: 100%;
+  }
+
+  .headerRight button {
+    flex: 1;
+  }
+
+  .scoresRow {
+    gap: 40px;
+  }
+
+  .pageScores {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
