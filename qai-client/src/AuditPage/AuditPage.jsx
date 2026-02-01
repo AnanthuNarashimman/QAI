@@ -3,7 +3,7 @@ import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool, FileText } from 'lucide-react';
+import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool, FileText, ShieldCheck, ShieldX } from 'lucide-react';
 
 function getProgressIcon(message) {
   if (message.includes('Page 1')) return <Compass size={14} />;
@@ -339,7 +339,7 @@ function AuditPage() {
                   <span className={`${styles.macDot} ${styles.macDotGreen}`} />
                   <span className={styles.macTitle}>Website Audit</span>
                 </div>
-                <div className={`${styles.macBody} ${isStopped ? styles.macBodyStopped : ''}`}>
+                <div className={`${styles.macBody} ${isStopped ? styles.macBodyStopped : (!isRunning && auditResults) ? styles.macBodyComplete : ''}`}>
                   {/* Nav skeleton */}
                   <div className={styles.skelNav}>
                     <div className={`${styles.skelBlock} ${styles.skelLogo}`} />
@@ -366,10 +366,31 @@ function AuditPage() {
                       <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
                       <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
                     </div>
-                    <div className={styles.skelCard}>
-                      <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
-                      <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
-                      <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
+                    <div className={`${styles.skelCard} ${styles.skelCardCenter}`}>
+                      {/* Middle card: show status content when stopped/complete, skeleton otherwise */}
+                      {isStopped ? (
+                        <div className={styles.cardStatusContent}>
+                          <div className={`${styles.overlayIconRing} ${styles.overlayIconRingStopped}`}>
+                            <ShieldX size={22} />
+                          </div>
+                          <span className={`${styles.overlayLabel} ${styles.overlayLabelStopped}`}>Audit Stopped</span>
+                          <span className={`${styles.overlaySubtext} ${styles.overlaySubtextStopped}`}>Stopped by user</span>
+                        </div>
+                      ) : (!isRunning && auditResults) ? (
+                        <div className={styles.cardStatusContent}>
+                          <div className={`${styles.overlayIconRing} ${styles.overlayIconRingComplete}`}>
+                            <ShieldCheck size={22} />
+                          </div>
+                          <span className={`${styles.overlayLabel} ${styles.overlayLabelComplete}`}>Audit Complete</span>
+                          <span className={`${styles.overlaySubtext} ${styles.overlaySubtextComplete}`}>Generate the report</span>
+                        </div>
+                      ) : (
+                        <>
+                          <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
+                          <div className={`${styles.skelBlock} ${styles.skelCardTitle}`} />
+                          <div className={`${styles.skelBlock} ${styles.skelCardText}`} />
+                        </>
+                      )}
                     </div>
                     <div className={styles.skelCard}>
                       <div className={`${styles.skelBlock} ${styles.skelCardImg}`} />
@@ -381,17 +402,10 @@ function AuditPage() {
                   <div className={styles.skelFooter}>
                     <div className={`${styles.skelBlock} ${styles.skelFooterLine}`} />
                   </div>
-                  {/* Animated pen cursor */}
-                  {!isStopped && (
+                  {/* Animated pen cursor — only while running */}
+                  {isRunning && (
                     <div className={styles.penCursor}>
                       <PenTool size={18} />
-                    </div>
-                  )}
-                  {/* Stopped overlay */}
-                  {isStopped && (
-                    <div className={styles.stoppedOverlay}>
-                      <Square size={28} />
-                      <span>Stopped</span>
                     </div>
                   )}
                 </div>
