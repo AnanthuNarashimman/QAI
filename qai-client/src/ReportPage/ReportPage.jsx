@@ -1,95 +1,14 @@
 import { useRef } from 'react';
-import { useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
 import styles from './ReportPage.module.css';
 import Navbar from '../Components/Navbar';
 import {
   Globe, Download, ArrowLeft, AlertTriangle, Lightbulb,
   MousePointerClick, Palette, Target, Users, Hash, Calendar,
-  Briefcase, MessageSquare
+  Briefcase, MessageSquare, TrendingUp, TrendingDown, Minus,
+  ImageIcon
 } from 'lucide-react';
-
-const MOCK_DATA = {
-  audit_config: {
-    website_type: 'Corporate IT',
-    target_audience: 'Potential clients',
-    theme_description: 'Corporate blue, professional, technical',
-    inferred_tone: 'Technical and professional',
-    primary_goal: 'Contact us',
-  },
-  base_domain: 'cubeaisolutions.com',
-  total_pages_analyzed: 1,
-  urls_analyzed: ['https://cubeaisolutions.com'],
-  results: [
-    {
-      page_number: 1,
-      url: 'https://cubeaisolutions.com',
-      validation: {
-        values: [
-          {
-            ctas_found: 28,
-            cta_score: 45.0,
-            cta_thoughts: [
-              {
-                element_name: "Header Button 'Get Started'",
-                issues: "The text 'Get Started' is generic and appears repeatedly. It does not explicitly align with the user's primary goal of 'Contact us'.",
-                recommendations: "Rename to 'Contact Us', 'Talk to an Expert', or 'Request Consultation' to be more direct.",
-              },
-              {
-                element_name: 'Service Cards (AIMA, AIDA, VisionAI)',
-                issues: "The 'Get Details' CTAs are small text links that blend into the content. They lack the visual weight of buttons, reducing click-through probability.",
-                recommendations: 'Convert these text links into outlined or secondary style buttons to make them stand out.',
-              },
-              {
-                element_name: 'Product Cards (iSpeak, Andromeda, etc.)',
-                issues: 'There are NO Call-to-Actions on the product cards. Users have no direct way to learn more or request a demo for a specific product.',
-                recommendations: "Add a primary button (e.g., 'Request Demo' or 'Learn More') to every product card.",
-              },
-              {
-                element_name: 'Culture Section',
-                issues: "The section describes 'People First' values but offers no path for potential candidates to apply. It is a dead end.",
-                recommendations: "Add a 'Join Our Team' or 'View Careers' button.",
-              },
-              {
-                element_name: 'Blog Cards (Insights)',
-                issues: "The blog cards lack a visible 'Read More' button or link, relying on the user knowing the whole card is clickable.",
-                recommendations: "Add a visible 'Read Article' text link or button to improve affordance.",
-              },
-            ],
-            theme_score: 72.0,
-            theme_thoughts: [
-              {
-                element_name: "Hero Headline 'Transform'",
-                issues: "The cyan text color used for 'Transform' has low contrast against the white background, making it harder to read.",
-                recommendations: 'Darken the cyan shade to meet WCAG accessibility standards for contrast.',
-              },
-              {
-                element_name: 'About Section Service Pill',
-                issues: "The text 'Artificial Intelligence...' is truncated with an ellipsis, hiding the full service name.",
-                recommendations: 'Increase the width of the text container or adjust the font size to display the full text.',
-              },
-              {
-                element_name: 'Tech Solution Card (Services)',
-                issues: 'The card is aligned to the left with a large, empty white space to its right, creating a feeling of broken or missing content.',
-                recommendations: 'Center the card if it is a single item, or add a visual graphic to the right side to balance the layout.',
-              },
-              {
-                element_name: 'Projects Stats Text',
-                issues: "Grammar error in the statistic label: '150+ AI Product Solution'. It should be plural.",
-                recommendations: "Change text to '150+ AI Product Solutions'.",
-              },
-              {
-                element_name: 'Blog List (Insights)',
-                issues: 'The blog posts are not sorted chronologically. An August 2025 post appears before a December 2025 post.',
-                recommendations: 'Sort the blog posts by date, displaying the most recent (December) first.',
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-};
 
 function scoreColor(score) {
   if (score >= 70) return '#4ade80';
@@ -97,40 +16,74 @@ function scoreColor(score) {
   return '#ef4444';
 }
 
-function ScoreGauge({ score, label }) {
-  const radius = 54;
+function scoreGrade(score) {
+  if (score >= 90) return 'A';
+  if (score >= 80) return 'B+';
+  if (score >= 70) return 'B';
+  if (score >= 60) return 'C+';
+  if (score >= 50) return 'C';
+  if (score >= 40) return 'D';
+  return 'F';
+}
+
+function scoreSummary(score) {
+  if (score >= 70) return 'Good';
+  if (score >= 40) return 'Needs Work';
+  return 'Critical';
+}
+
+function ScoreGauge({ score, label, icon, issueCount }) {
+  const radius = 58;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
   const color = scoreColor(score);
+  const grade = scoreGrade(score);
+  const summary = scoreSummary(score);
+  const TrendIcon = score >= 70 ? TrendingUp : score >= 40 ? Minus : TrendingDown;
 
   return (
-    <div className={styles.gaugeContainer}>
-      <svg width="140" height="140" viewBox="0 0 140 140">
-        <circle
-          cx="70" cy="70" r={radius}
-          fill="none" stroke="rgba(0,180,216,0.1)" strokeWidth="10"
-        />
-        <circle
-          cx="70" cy="70" r={radius}
-          fill="none" stroke={color} strokeWidth="10"
-          strokeDasharray={circumference} strokeDashoffset={offset}
-          strokeLinecap="round"
-          transform="rotate(-90 70 70)"
-          style={{ transition: 'stroke-dashoffset 1s ease' }}
-        />
-        <text x="70" y="66" textAnchor="middle" className={styles.gaugeScore}>
-          {Math.round(score)}
-        </text>
-        <text x="70" y="84" textAnchor="middle" className={styles.gaugeLabel}>
-          / 100
-        </text>
-      </svg>
-      <span className={styles.gaugeName}>{label}</span>
+    <div className={styles.gaugeCard}>
+      <div className={styles.gaugeCardHeader}>
+        <div className={styles.gaugeIconWrap} style={{ background: `${color}15` }}>
+          {icon}
+        </div>
+        <div className={styles.gaugeCardMeta}>
+          <span className={styles.gaugeName}>{label}</span>
+          <span className={styles.gaugeIssueCount}>{issueCount} issue{issueCount !== 1 ? 's' : ''} found</span>
+        </div>
+        <span className={styles.gaugeGrade} style={{ color }}>{grade}</span>
+      </div>
+      <div className={styles.gaugeVisual}>
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle
+            cx="75" cy="75" r={radius}
+            fill="none" stroke="rgba(0,180,216,0.08)" strokeWidth="11"
+          />
+          <circle
+            cx="75" cy="75" r={radius}
+            fill="none" stroke={color} strokeWidth="11"
+            strokeDasharray={circumference} strokeDashoffset={offset}
+            strokeLinecap="round"
+            transform="rotate(-90 75 75)"
+            style={{ transition: 'stroke-dashoffset 1s ease' }}
+          />
+          <text x="75" y="70" textAnchor="middle" className={styles.gaugeScore}>
+            {Math.round(score)}
+          </text>
+          <text x="75" y="88" textAnchor="middle" className={styles.gaugeLabel}>
+            / 100
+          </text>
+        </svg>
+      </div>
+      <div className={styles.gaugeSummaryRow}>
+        <TrendIcon size={14} style={{ color }} />
+        <span className={styles.gaugeSummaryText} style={{ color }}>{summary}</span>
+      </div>
     </div>
   );
 }
 
-function IssueCard({ elementName, issues, recommendations, type }) {
+function IssueCard({ elementName, issues, recommendations, type, screenshot }) {
   const icon = type === 'cta'
     ? <MousePointerClick size={16} />
     : <Palette size={16} />;
@@ -143,19 +96,39 @@ function IssueCard({ elementName, issues, recommendations, type }) {
           <span>{elementName}</span>
         </div>
       </div>
-      <div className={styles.issueBody}>
-        <div className={styles.issueSection}>
-          <span className={`${styles.issueSectionLabel} ${styles.issueLabelWarn}`}>
-            <AlertTriangle size={12} /> Issue
-          </span>
-          <p className={styles.issueSectionText}>{issues}</p>
+
+      <div className={styles.issueCardLayout}>
+        {/* Left: text */}
+        <div className={styles.issueBody}>
+          <div className={`${styles.issueSection} ${styles.issueHighlight}`}>
+            <span className={`${styles.issueSectionLabel} ${styles.issueLabelWarn}`}>
+              <AlertTriangle size={12} /> Issue
+            </span>
+            <p className={styles.issueSectionText}>{issues}</p>
+          </div>
+          <div className={`${styles.issueSection} ${styles.recommendHighlight}`}>
+            <span className={`${styles.issueSectionLabel} ${styles.issueLabelFix}`}>
+              <Lightbulb size={12} /> Recommendation
+            </span>
+            <p className={styles.issueSectionText}>{recommendations}</p>
+          </div>
         </div>
-        <div className={styles.issueSection}>
-          <span className={`${styles.issueSectionLabel} ${styles.issueLabelFix}`}>
-            <Lightbulb size={12} /> Recommendation
-          </span>
-          <p className={styles.issueSectionText}>{recommendations}</p>
-        </div>
+
+        {/* Right: screenshot or placeholder */}
+        {screenshot ? (
+          <div className={styles.screenshotWrap}>
+            <img
+              src={`data:image/jpeg;base64,${screenshot}`}
+              alt={`Screenshot for ${elementName}`}
+              className={styles.screenshotImage}
+            />
+          </div>
+        ) : (
+          <div className={styles.screenshotPlaceholder}>
+            <ImageIcon size={24} strokeWidth={1.5} />
+            <span>Screenshot</span>
+          </div>
+        )}
       </div>
     </div>
   );
@@ -166,8 +139,22 @@ function ReportPage() {
   const navigate = useNavigate();
   const reportRef = useRef(null);
 
-  // Use passed state or fall back to mock data for design preview
-  const reportData = location.state?.results || MOCK_DATA;
+  const reportData = location.state?.results;
+
+  // Redirect back if no data was passed
+  if (!reportData) {
+    return (
+      <div className={styles.container}>
+        <Navbar />
+        <main className={styles.main}>
+          <p>No report data available.</p>
+          <button className={styles.backBtn} onClick={() => navigate(-1)}>
+            <ArrowLeft size={15} /> Go Back
+          </button>
+        </main>
+      </div>
+    );
+  }
 
   const auditConfig = reportData.audit_config || {};
   const allValues = reportData.results.flatMap(r =>
@@ -181,20 +168,43 @@ function ReportPage() {
     ? allValues.reduce((s, v) => s + v.theme_score, 0) / allValues.length
     : 0;
 
-  const allCtaThoughts = allValues.flatMap(v => v.cta_thoughts || []);
-  const allThemeThoughts = allValues.flatMap(v => v.theme_thoughts || []);
+  // Build thoughts with per-viewport screenshot mapped via viewport_number
+  const allCtaThoughts = reportData.results.flatMap(r => {
+    const screenshots = r.screenshots || {};
+    return (r.validation?.values || []).flatMap(v =>
+      (v.cta_thoughts || []).map(t => ({
+        ...t,
+        screenshot: screenshots[t.viewport_number] || null,
+      }))
+    );
+  });
+  const allThemeThoughts = reportData.results.flatMap(r => {
+    const screenshots = r.screenshots || {};
+    return (r.validation?.values || []).flatMap(v =>
+      (v.theme_thoughts || []).map(t => ({
+        ...t,
+        screenshot: screenshots[t.viewport_number] || null,
+      }))
+    );
+  });
 
   const handleDownloadPDF = () => {
     const element = reportRef.current;
+    // Add class that flattens layouts for html2canvas compatibility
+    element.classList.add(styles.pdfRendering);
+
     const opt = {
       margin: [10, 10, 10, 10],
       filename: `${reportData.base_domain}-audit-report.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
+      html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+      pagebreak: { mode: ['css', 'legacy'], avoid: [`.${styles.issueCard}`, `.${styles.gaugeCard}`, `.${styles.reportFooter}`] },
     };
-    html2pdf().set(opt).from(element).save();
+
+    html2pdf().set(opt).from(element).save().then(() => {
+      element.classList.remove(styles.pdfRendering);
+    });
   };
 
   const auditDate = new Date().toLocaleDateString('en-US', {
@@ -254,9 +264,39 @@ function ReportPage() {
           {/* ── OVERALL SCORES ── */}
           <section className={styles.section}>
             <h2 className={styles.sectionTitle}>Overall Scores</h2>
+
+            {/* Overall combined score bar */}
+            <div className={styles.overallBar}>
+              <div className={styles.overallBarInfo}>
+                <span className={styles.overallBarLabel}>Overall</span>
+                <span className={styles.overallBarValue} style={{ color: scoreColor((avgCtaScore + avgThemeScore) / 2) }}>
+                  {Math.round((avgCtaScore + avgThemeScore) / 2)} / 100
+                </span>
+              </div>
+              <div className={styles.overallBarTrack}>
+                <div
+                  className={styles.overallBarFill}
+                  style={{
+                    width: `${(avgCtaScore + avgThemeScore) / 2}%`,
+                    background: scoreColor((avgCtaScore + avgThemeScore) / 2),
+                  }}
+                />
+              </div>
+            </div>
+
             <div className={styles.scoresRow}>
-              <ScoreGauge score={avgCtaScore} label="CTA Score" />
-              <ScoreGauge score={avgThemeScore} label="Theme Score" />
+              <ScoreGauge
+                score={avgCtaScore}
+                label="CTA Score"
+                icon={<MousePointerClick size={18} />}
+                issueCount={allCtaThoughts.length}
+              />
+              <ScoreGauge
+                score={avgThemeScore}
+                label="Theme Score"
+                icon={<Palette size={18} />}
+                issueCount={allThemeThoughts.length}
+              />
             </div>
           </section>
 
@@ -312,6 +352,7 @@ function ReportPage() {
                     issues={t.issues}
                     recommendations={t.recommendations}
                     type="cta"
+                    screenshot={t.screenshot}
                   />
                 ))}
               </div>
@@ -335,11 +376,26 @@ function ReportPage() {
                     issues={t.issues}
                     recommendations={t.recommendations}
                     type="theme"
+                    screenshot={t.screenshot}
                   />
                 ))}
               </div>
             </section>
           )}
+
+          {/* ── FOOTER ── */}
+          <footer className={styles.reportFooter}>
+            <div className={styles.footerBrand}>
+              <span className={styles.footerLogo}>VibeAudit</span>
+              <span className={styles.footerDot} />
+              <span className={styles.footerTagline}>AI-Powered UX Audit</span>
+            </div>
+            <p className={styles.footerNote}>
+              This report was automatically generated by the VibeAudit Agent.
+              Scores and recommendations are based on automated analysis and may require human review.
+            </p>
+            <span className={styles.footerDate}>{auditDate}</span>
+          </footer>
 
         </div>
       </main>

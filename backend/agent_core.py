@@ -1,6 +1,7 @@
-from browser_use import Agent, ChatGoogle, Controller
+from browser_use import Agent, BrowserSession, ChatGoogle, Controller
 from dotenv import load_dotenv
 import asyncio
+import base64
 import json
 import logging
 import re
@@ -142,6 +143,7 @@ class Insight(BaseModel):
     element_name: str = Field(description="The specific website part (e.g., 'Hero Button', 'Footer')")
     issues: str = Field(description="The issue found")
     recommendations: str = Field(description="Recommendations to make it better")
+    viewport_number: int = Field(description="The viewport number (1-based) where this issue was observed during scrolling")
     
 class Value(BaseModel):
     ctas_found: int
@@ -289,7 +291,9 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
        **Colors:** clashing? inconsistent accents? consistent shadows/borders?
        {"- Compare against intended theme: " + audit_config.get('theme_description', '') if audit_config else ""}
 
-    4. RECORD specific issues with exact element names and locations
+    4. RECORD specific issues with exact element names and locations.
+       ⚠️ IMPORTANT: For EVERY issue you record, you MUST include the viewport_number you are currently on.
+       Viewport 1 = the initial view (top of page), Viewport 2 = after first scroll, etc.
 
     5. ONLY THEN scroll using: window.scrollBy(0, window.innerHeight)
 
@@ -325,6 +329,7 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     --- OUTPUT REQUIREMENTS ---
     - Reference elements by EXACT text/location (e.g., "The 'Learn More' button in Features section")
     - Give SPECIFIC fixes (e.g., "Change button color from #ccc to #0066cc for better contrast")
+    - For EVERY issue in cta_thoughts and theme_thoughts, set viewport_number to the viewport where you found it (1 = top of page, 2 = after first scroll, etc.)
     - Only report issues, skip things that are fine
     - Do NOT click links that leave the domain
     - Stay strictly on {url}
@@ -335,28 +340,78 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     ⚠️ If scores are 0 with no reasoning, go back and re-analyze.
     """
     
-    agent = Agent(llm=llm, task=task, controller=validation_controller, register_should_stop_callback=stop_callback)
+    # Use keep_alive so the browser survives agent completion for screenshot capture
+    browser_session = BrowserSession(keep_alive=True)
+
+    agent = Agent(
+        llm=llm,
+        task=task,
+        controller=validation_controller,
+        browser_session=browser_session,
+        register_should_stop_callback=stop_callback,
+    )
+
+    screenshots = {}  # viewport_number -> base64 JPEG string
 
     try:
         result = await agent.run()
+
+        validation_result = result.final_result()
+        if isinstance(validation_result, str):
+            validation_result = json.loads(validation_result)
+
+        # Collect unique viewport numbers from all issues
+        viewport_numbers = set()
+        for val in validation_result.get('values', []):
+            for thought in val.get('cta_thoughts', []):
+                vp = thought.get('viewport_number')
+                if vp is not None:
+                    viewport_numbers.add(int(vp))
+            for thought in val.get('theme_thoughts', []):
+                vp = thought.get('viewport_number')
+                if vp is not None:
+                    viewport_numbers.add(int(vp))
+
+        # Capture screenshots only for viewports that have issues
+        if viewport_numbers:
+            try:
+                current_page = await browser_session.get_current_page()
+                if current_page:
+                    # Scroll to top first
+                    await current_page.evaluate('window.scrollTo(0, 0)')
+                    await asyncio.sleep(0.5)
+
+                    viewport_height = await current_page.evaluate('window.innerHeight')
+
+                    for vp_num in sorted(viewport_numbers):
+                        scroll_y = (vp_num - 1) * viewport_height
+                        await current_page.evaluate(f'window.scrollTo(0, {scroll_y})')
+                        await asyncio.sleep(0.5)
+
+                        raw = await current_page.screenshot(type='jpeg')
+                        # raw may be bytes or already a base64 string depending on wrapper
+                        if isinstance(raw, bytes):
+                            screenshots[vp_num] = base64.b64encode(raw).decode('utf-8')
+                        else:
+                            screenshots[vp_num] = raw
+
+            except Exception as e:
+                print(f"Per-viewport screenshot capture failed for {url}: {e}")
+
     except InterruptedError:
         if handler:
             logging.getLogger('browser_use').removeHandler(handler)
+        await browser_session.stop()
         await agent.close()
-        return None
+        return None, None
     finally:
+        await browser_session.stop()
         await agent.close()
 
     # Remove handler to avoid duplicate logs on next call
     if handler:
         logging.getLogger('browser_use').removeHandler(handler)
 
-    validation_result = result.final_result()
-
-    # Parse JSON string to dictionary if needed
-    if isinstance(validation_result, str):
-        validation_result = json.loads(validation_result)
-
-    return validation_result
+    return validation_result, screenshots
     
 

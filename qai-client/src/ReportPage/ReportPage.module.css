@@ -5,6 +5,7 @@
   color: #1a1a2e;
   font-family: var(--font-primary);
   position: relative;
+  margin-top: 30px;
 }
 
 .container::before {
@@ -33,7 +34,7 @@
   position: relative;
   z-index: 1;
   padding: 100px 40px 60px;
-  max-width: 960px;
+  max-width: 1160px;
   margin: 0 auto;
 }
 
@@ -183,25 +184,134 @@
 }
 
 /* ══════════════════════════════════════════
-   SCORE GAUGES
+   OVERALL BAR
    ══════════════════════════════════════════ */
-.scoresRow {
-  display: flex;
-  justify-content: center;
-  gap: 80px;
-  padding: 20px 0 10px;
+.overallBar {
+  margin-bottom: 28px;
+  padding: 18px 22px;
+  border-radius: 12px;
+  background: rgba(0, 180, 216, 0.04);
+  border: 1px solid rgba(0, 180, 216, 0.12);
 }
 
-.gaugeContainer {
+.overallBarInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.overallBarLabel {
+  font-family: var(--font-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(26, 26, 46, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+}
+
+.overallBarValue {
+  font-family: var(--font-primary);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.overallBarTrack {
+  width: 100%;
+  height: 10px;
+  border-radius: 5px;
+  background: rgba(0, 180, 216, 0.08);
+  overflow: hidden;
+}
+
+.overallBarFill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 1s ease;
+}
+
+/* ══════════════════════════════════════════
+   SCORE GAUGE CARDS
+   ══════════════════════════════════════════ */
+.scoresRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.gaugeCard {
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 16px;
+  padding: 24px 20px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 180, 216, 0.12);
+  background: rgba(0, 180, 216, 0.03);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gaugeCard:hover {
+  border-color: rgba(0, 180, 216, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 180, 216, 0.08);
+}
+
+.gaugeCardHeader {
+  display: flex;
+  align-items: center;
   gap: 12px;
+  width: 100%;
+}
+
+.gaugeIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.gaugeIconWrap svg {
+  color: inherit;
+}
+
+.gaugeCardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.gaugeName {
+  font-family: var(--font-secondary);
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.gaugeIssueCount {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  color: rgba(26, 26, 46, 0.4);
+}
+
+.gaugeGrade {
+  font-family: var(--font-primary);
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.gaugeVisual {
+  display: flex;
+  justify-content: center;
 }
 
 .gaugeScore {
   font-family: var(--font-primary);
-  font-size: 30px;
+  font-size: 32px;
   font-weight: 700;
   fill: #1a1a2e;
 }
@@ -212,11 +322,16 @@
   fill: rgba(26, 26, 46, 0.35);
 }
 
-.gaugeName {
+.gaugeSummaryRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gaugeSummaryText {
   font-family: var(--font-secondary);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: rgba(26, 26, 46, 0.6);
 }
 
 /* ══════════════════════════════════════════
@@ -327,16 +442,81 @@
   opacity: 0.7;
 }
 
+/* ── Issue Card Layout (text left, screenshot right) ── */
+.issueCardLayout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* ── Screenshot Placeholder ── */
+.screenshotPlaceholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 280px;
+  aspect-ratio: 16 / 10;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: 2px dashed rgba(0, 180, 216, 0.2);
+  background: rgba(0, 180, 216, 0.03);
+}
+
+/* ── Real screenshot image ── */
+.screenshotWrap {
+  width: 280px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 180, 216, 0.15);
+}
+
+.screenshotImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+.screenshotPlaceholder svg {
+  color: rgba(0, 180, 216, 0.3);
+}
+
+.screenshotPlaceholder span {
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  color: rgba(26, 26, 46, 0.3);
+}
+
 .issueBody {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .issueSection {
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* ── Separate highlight blocks ── */
+.issueHighlight {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, 0.05);
+  border-left: 3px solid rgba(245, 158, 11, 0.5);
+}
+
+.recommendHighlight {
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: rgba(74, 222, 128, 0.05);
+  border-left: 3px solid rgba(74, 222, 128, 0.5);
 }
 
 .issueSectionLabel {
@@ -352,11 +532,11 @@
 }
 
 .issueLabelWarn {
-  color: rgba(245, 158, 11, 0.7);
+  color: rgba(245, 158, 11, 0.8);
 }
 
 .issueLabelFix {
-  color: rgba(74, 222, 128, 0.7);
+  color: rgba(74, 222, 128, 0.8);
 }
 
 .issueSectionText {
@@ -368,7 +548,155 @@
 }
 
 /* ══════════════════════════════════════════
-   PRINT / PDF OVERRIDES
+   REPORT FOOTER
+   ══════════════════════════════════════════ */
+.reportFooter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 28px 24px;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  background: rgba(255, 255, 255, 0.7);
+  text-align: center;
+}
+
+.footerBrand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footerLogo {
+  font-family: var(--font-primary);
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00B4D8, #0077B6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.footerDot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(0, 180, 216, 0.4);
+}
+
+.footerTagline {
+  font-family: var(--font-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(26, 26, 46, 0.4);
+}
+
+.footerNote {
+  font-family: var(--font-secondary);
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(26, 26, 46, 0.35);
+  max-width: 480px;
+  margin: 0;
+}
+
+.footerDate {
+  font-family: var(--font-secondary);
+  font-size: 11px;
+  color: rgba(26, 26, 46, 0.25);
+}
+
+/* ══════════════════════════════════════════
+   PDF RENDERING OVERRIDES
+   (applied via JS class during html2canvas capture)
+   ══════════════════════════════════════════ */
+
+/* Flatten grid to stacked blocks */
+.pdfRendering .scoresRow {
+  display: block;
+}
+
+.pdfRendering .gaugeCard {
+  display: block;
+  text-align: center;
+  margin-bottom: 16px;
+  page-break-inside: avoid;
+}
+
+.pdfRendering .gaugeCardHeader {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.pdfRendering .gaugeVisual {
+  display: block;
+  text-align: center;
+  margin: 0 auto 8px;
+}
+
+.pdfRendering .gaugeVisual svg {
+  display: inline-block;
+}
+
+.pdfRendering .gaugeSummaryRow {
+  display: flex;
+  justify-content: center;
+}
+
+/* Flatten issue card side-by-side to stacked */
+.pdfRendering .issueCardLayout {
+  display: block;
+}
+
+.pdfRendering .issueBody {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.pdfRendering .issueHighlight,
+.pdfRendering .recommendHighlight {
+  margin-bottom: 10px;
+}
+
+.pdfRendering .screenshotPlaceholder,
+.pdfRendering .screenshotWrap {
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto;
+}
+
+/* Fix gradient text — html2canvas can't render background-clip: text */
+.pdfRendering .footerLogo {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: #00B4D8;
+  background-clip: unset;
+  color: #00B4D8;
+}
+
+/* Ensure cards don't split across pages */
+.pdfRendering .issueCard {
+  page-break-inside: avoid;
+}
+
+.pdfRendering .section {
+  page-break-inside: avoid;
+}
+
+.pdfRendering .reportFooter {
+  page-break-inside: avoid;
+}
+
+/* Hide buttons in PDF */
+.pdfRendering .downloadBtn,
+.pdfRendering .backBtn {
+  display: none;
+}
+
+/* ══════════════════════════════════════════
+   PRINT OVERRIDES
    ══════════════════════════════════════════ */
 @media print {
   .container::before,
@@ -410,11 +738,22 @@
   }
 
   .scoresRow {
-    gap: 40px;
+    grid-template-columns: 1fr;
+    gap: 16px;
   }
 
   .pageScores {
     flex-direction: column;
     gap: 6px;
+  }
+
+  .issueCardLayout {
+    flex-direction: column;
+  }
+
+  .screenshotPlaceholder,
+  .screenshotWrap {
+    width: 100%;
+    min-height: auto;
   }
 }

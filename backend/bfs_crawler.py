@@ -108,7 +108,7 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
 
             # Validate page (CTA and theme analysis)
             log("Validating CTA and theme...", 'info')
-            validation = await validate_page(current_url, audit_config, emit_log=emit_log, stop_flag=stop_flag)
+            validation, screenshots = await validate_page(current_url, audit_config, emit_log=emit_log, stop_flag=stop_flag)
 
             if is_stopped():
                 break
@@ -132,11 +132,12 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
 
                 log(f"Added {added_count} new links to queue", 'success')
 
-            # Store results
+            # Store results — screenshots is a dict mapping viewport_number -> base64 JPEG
             results.append({
                 'url': current_url,
                 'page_number': page_count,
-                'validation': validation
+                'validation': validation,
+                'screenshots': screenshots or {}
             })
 
             log(f"Page {page_count} analysis complete", 'success')
