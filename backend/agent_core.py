@@ -340,8 +340,7 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     ⚠️ If scores are 0 with no reasoning, go back and re-analyze.
     """
     
-    # Use keep_alive so the browser survives agent completion for screenshot capture
-    browser_session = BrowserSession(keep_alive=True)
+    browser_session = BrowserSession()
 
     agent = Agent(
         llm=llm,
@@ -351,52 +350,12 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
         register_should_stop_callback=stop_callback,
     )
 
-    screenshots = {}  # viewport_number -> base64 JPEG string
-
     try:
         result = await agent.run()
 
         validation_result = result.final_result()
         if isinstance(validation_result, str):
             validation_result = json.loads(validation_result)
-
-        # Collect unique viewport numbers from all issues
-        viewport_numbers = set()
-        for val in validation_result.get('values', []):
-            for thought in val.get('cta_thoughts', []):
-                vp = thought.get('viewport_number')
-                if vp is not None:
-                    viewport_numbers.add(int(vp))
-            for thought in val.get('theme_thoughts', []):
-                vp = thought.get('viewport_number')
-                if vp is not None:
-                    viewport_numbers.add(int(vp))
-
-        # Capture screenshots only for viewports that have issues
-        if viewport_numbers:
-            try:
-                current_page = await browser_session.get_current_page()
-                if current_page:
-                    # Scroll to top first
-                    await current_page.evaluate('window.scrollTo(0, 0)')
-                    await asyncio.sleep(0.5)
-
-                    viewport_height = await current_page.evaluate('window.innerHeight')
-
-                    for vp_num in sorted(viewport_numbers):
-                        scroll_y = (vp_num - 1) * viewport_height
-                        await current_page.evaluate(f'window.scrollTo(0, {scroll_y})')
-                        await asyncio.sleep(0.5)
-
-                        raw = await current_page.screenshot(type='jpeg')
-                        # raw may be bytes or already a base64 string depending on wrapper
-                        if isinstance(raw, bytes):
-                            screenshots[vp_num] = base64.b64encode(raw).decode('utf-8')
-                        else:
-                            screenshots[vp_num] = raw
-
-            except Exception as e:
-                print(f"Per-viewport screenshot capture failed for {url}: {e}")
 
     except InterruptedError:
         if handler:
@@ -411,6 +370,46 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     # Remove handler to avoid duplicate logs on next call
     if handler:
         logging.getLogger('browser_use').removeHandler(handler)
+
+    # Collect unique viewport numbers from all issues
+    viewport_numbers = set()
+    for val in validation_result.get('values', []):
+        for thought in val.get('cta_thoughts', []):
+            vp = thought.get('viewport_number')
+            if vp is not None:
+                viewport_numbers.add(int(vp))
+        for thought in val.get('theme_thoughts', []):
+            vp = thought.get('viewport_number')
+            if vp is not None:
+                viewport_numbers.add(int(vp))
+
+    # Map browser-use's built-in step screenshots to viewport numbers.
+    # The agent scrolls sequentially (VP1 → VP2 → VP3 ...), so the step screenshots
+    # correspond to viewports in order. We take the last max_viewport screenshots
+    # from the list (working from the end avoids blank/loading screenshots at the start).
+    screenshots = {}
+    if viewport_numbers:
+        try:
+            screenshot_paths = result.screenshot_paths()
+            # Filter out None entries (e.g., pre-navigation step)
+            valid_paths = [p for p in screenshot_paths if p is not None]
+
+            max_vp = max(viewport_numbers)
+
+            # The last max_vp screenshots map to viewports 1..max_vp in order
+            if len(valid_paths) >= max_vp:
+                vp_screenshots = valid_paths[-max_vp:]
+            else:
+                # Fewer screenshots than viewports — use what we have, mapped from VP1 onward
+                vp_screenshots = valid_paths
+
+            for i, path in enumerate(vp_screenshots):
+                vp_num = i + 1
+                if vp_num in viewport_numbers:
+                    with open(path, 'rb') as f:
+                        screenshots[vp_num] = base64.b64encode(f.read()).decode('utf-8')
+        except Exception as e:
+            print(f"Screenshot mapping failed for {url}: {e}")
 
     return validation_result, screenshots
     

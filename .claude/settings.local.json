@@ -6,7 +6,9 @@
       "Bash(pip install:*)",
       "Read(//c/Users/admin/AppData/Local/Programs/Python/Python310/Lib/site-packages/**)",
       "Bash(python:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(.venvScriptspip install playwright)",
+      "Bash(uv pip install:*)"
     ]
   }
 }
