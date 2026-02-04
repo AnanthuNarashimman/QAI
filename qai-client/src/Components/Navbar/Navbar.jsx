@@ -1,33 +1,44 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
-import {Bot, ClipboardClock, LibraryBig, Shield} from 'lucide-react';
+import { Shield, ChevronDown } from 'lucide-react';
 
 function Navbar() {
+  const navigate = useNavigate();
+
   return (
     <nav className={styles.nav}>
-      <div className={styles.navLeft}>
-        <div className={styles.logo}>
-          <Shield size={22} />
-          <span className={styles.logoText}>VibeAudit</span>
+      <div className={styles.navInner}>
+        <div className={styles.navLeft}>
+          <div className={styles.logo} onClick={() => navigate('/')}>
+            <Shield size={20} />
+            <span className={styles.logoText}>VibeAudit</span>
+          </div>
         </div>
-      </div>
 
-      <div className={styles.navCenter}>
-        <button className={`${styles.navTab} ${styles.navTabActive}`}>
-          <Bot size={21}/>
-          Agent
-        </button>
-        <button className={styles.navTab}>
-          <ClipboardClock size={20}/>
-          History
-        </button>
-        <button className={styles.navTab}>
-          <LibraryBig size={20} />
-          Resources
-        </button>
-      </div>
+        <div className={styles.navCenter}>
+          <button className={styles.navLink}>
+            Product
+            <ChevronDown size={14} />
+          </button>
+          <button className={styles.navLink} onClick={() => navigate('/agent')}>
+            Why us
+          </button>
+          <button className={styles.navLink}>
+            About us
+          </button>
+          <button className={styles.navLink}>
+            Resources
+          </button>
+        </div>
 
-      <div className={styles.navRight}>
-        <button className={styles.getStartedBtn}>Contact</button>
+        <div className={styles.navRight}>
+          <button
+            className={styles.bookDemoBtn}
+            onClick={() => navigate('/agent')}
+          >
+            Get started
+          </button>
+        </div>
       </div>
     </nav>
   );

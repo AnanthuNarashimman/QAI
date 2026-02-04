@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Bungee&family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Figtree:ital,wght@0,300..900;1,300..900&family=Fira+Code:wght@300..700&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Press+Start+2P&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik+80s+Fade&family=Rubik+Glitch&family=Rubik:ital,wght@0,300..900;1,300..900&family=Space+Grotesk:wght@300..700&family=Story+Script&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Space+Grotesk:wght@300..700&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 
 * {
   margin: 0;
@@ -7,10 +7,10 @@
 }
 
 :root {
-  --font-primary: 'Space Grotesk', sans-serif;
-  --font-secondary: 'Inter', sans-serif;
+  --font-primary: 'Inter', sans-serif;
+  --font-heading: 'Space Grotesk', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-  --font-button: 'Figtree', sans-serif;
+  --font-button: 'Inter', sans-serif;
 
   font-family: var(--font-primary);
   line-height: 1.5;
@@ -18,7 +18,7 @@
 
   color-scheme: light;
   color: #1a1a2e;
-  background-color: #e8f4f8;
+  background-color: #ffffff;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
