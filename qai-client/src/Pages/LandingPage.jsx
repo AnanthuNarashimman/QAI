@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Star, StarHalf, Play } from 'lucide-react';
+import { Star, StarHalf, Play, Zap, CheckCircle, Sparkles } from 'lucide-react';
 import hero from "../assets/Hero.png";
 
 function LandingPage() {
@@ -69,6 +69,27 @@ function LandingPage() {
                   alt="VibeAudit platform showing BFS crawling, structured analysis, and audit results"
                   className={styles.heroImage}
                 />
+                
+                {/* Floating Elements */}
+                <div className={styles.floater1}>
+                  <div className={styles.floaterIcon}>
+                    <Zap size={20} strokeWidth={2.5} />
+                  </div>
+                  <div className={styles.floaterText}>
+                    <div className={styles.floaterTitle}>Automated Audits</div>
+                    <div className={styles.floaterSubtitle}>Saves hours of work</div>
+                  </div>
+                </div>
+
+                <div className={styles.floater2}>
+                  <div className={styles.floaterIcon}>
+                    <CheckCircle size={20} strokeWidth={2.5} />
+                  </div>
+                  <div className={styles.floaterText}>
+                    <div className={styles.floaterTitle}>100% Accurate</div>
+                    <div className={styles.floaterSubtitle}>AI-powered insights</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

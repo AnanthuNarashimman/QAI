@@ -1,26 +1,57 @@
 .nav {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   z-index: 100;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(0, 180, 216, 0.12);
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-radius: 9999px;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  max-width: 1200px;
+  width: 90%;
+  overflow: hidden;
+}
+
+.nav.scrolled {
+  top: 20px;
+  width: 64px;
+  height: 64px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
 }
 
 .navInner {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  max-width: 1280px;
-  margin: 0 auto;
+  width: 100%;
   padding: 0 2rem;
   height: 72px;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.scrolled .navInner {
+  padding: 0;
+  justify-content: center;
+  height: 64px;
 }
 
 .navLeft {
   display: flex;
   align-items: center;
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.navLeft.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
 }
 
 .logo {
@@ -39,10 +70,39 @@
   letter-spacing: -0.5px;
 }
 
+.logoMinimized {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #1a1a2e;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.logoMinimized.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
 .navCenter {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.navCenter.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
 }
 
 .navLink {
@@ -69,6 +129,14 @@
 .navRight {
   display: flex;
   align-items: center;
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.navRight.hidden {
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
 }
 
 .bookDemoBtn {

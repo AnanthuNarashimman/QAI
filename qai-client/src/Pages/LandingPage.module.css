@@ -212,6 +212,7 @@
 }
 
 .heroImageWrapper {
+  position: relative;
   background: linear-gradient(135deg, #f0f9fc 0%, #e8f4f8 100%);
   border: 1px solid rgba(0, 180, 216, 0.08);
   border-radius: 16px;
@@ -228,6 +229,80 @@
   user-select: none;
   pointer-events: none;
   border-radius: 12px;
+}
+
+/* Floating Elements */
+.floater1,
+.floater2 {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  animation: float 3s ease-in-out infinite;
+}
+
+.floater1 {
+  top: 10%;
+  left: -12%;
+  padding: 0.875rem 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  animation-delay: 0s;
+}
+
+.floater2 {
+  bottom: 10%;
+  right: -12%;
+  padding: 0.875rem 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  animation-delay: 1s;
+}
+
+.floaterIcon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #00B4D8 0%, #0096c7 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.floaterText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.floaterTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  white-space: nowrap;
+}
+
+.floaterSubtitle {
+  font-size: 0.75rem;
+  color: rgba(26, 26, 46, 0.5);
+  white-space: nowrap;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 /* Responsive */
@@ -280,5 +355,10 @@
   .heroImageWrapper {
     padding: 0.75rem;
     border-radius: 14px;
+  }
+
+  .floater1,
+  .floater2 {
+    display: none;
   }
 }
