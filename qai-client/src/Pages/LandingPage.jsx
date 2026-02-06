@@ -1,8 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Star, StarHalf, Play, Zap, CheckCircle, Sparkles } from 'lucide-react';
+import { Star, StarHalf, Play, Zap, CheckCircle } from 'lucide-react';
 import hero from "../assets/Hero.png";
+
+import sc1 from "../assets/SC1.png";
+import sc2 from "../assets/sc2.png";
+import sc3 from "../assets/sc3.png";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -90,6 +94,73 @@ function LandingPage() {
                     <div className={styles.floaterSubtitle}>AI-powered insights</div>
                   </div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* How It Works Section */}
+        <section className={styles.howItWorks}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>How It Works</span>
+            <h2 className={styles.sectionTitle}>Three steps to a perfect audit</h2>
+            <p className={styles.sectionSubtitle}>
+              Our AI-powered agent handles the heavy lifting while you focus on what matters
+            </p>
+          </div>
+
+          <div className={styles.stepsContainer}>
+            {/* Step 1 - Configure */}
+            <div className={styles.stepCard}>
+              <div className={styles.stepInfo}>
+                <div className={styles.stepNumber}>
+                  <span>01</span>
+                </div>
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>Configure Your Audit</h3>
+                  <p className={styles.stepDescription}>
+                    Enter your website URL, set the maximum number of pages to crawl, and describe your site's purpose and target audience. Our AI uses this context to provide relevant, actionable feedback.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.stepImageWrapper}>
+                <img src={sc1} alt="Agent configuration page" className={styles.stepImage} />
+              </div>
+            </div>
+
+            {/* Step 2 - Watch AI */}
+            <div className={`${styles.stepCard} ${styles.stepCardReverse}`}>
+              <div className={styles.stepInfo}>
+                <div className={styles.stepNumber}>
+                  <span>02</span>
+                </div>
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>Watch AI in Action</h3>
+                  <p className={styles.stepDescription}>
+                    See real-time logs as our agent navigates your website, analyzing layouts, checking accessibility, and identifying design issues. Track progress with a live timeline of agent activity.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.stepImageWrapper}>
+                <img src={sc2} alt="Audit in progress" className={styles.stepImage} />
+              </div>
+            </div>
+
+            {/* Step 3 - Get Report */}
+            <div className={styles.stepCard}>
+              <div className={styles.stepInfo}>
+                <div className={styles.stepNumber}>
+                  <span>03</span>
+                </div>
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>Get Your Report</h3>
+                  <p className={styles.stepDescription}>
+                    Download a comprehensive PDF report with all findings, severity ratings, and actionable recommendations. Share with your team or use it as a roadmap for improvements.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.stepImageWrapper}>
+                <img src={sc3} alt="Generated report" className={styles.stepImage} />
               </div>
             </div>
           </div>

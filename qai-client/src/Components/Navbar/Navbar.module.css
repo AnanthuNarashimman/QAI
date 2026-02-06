@@ -4,25 +4,41 @@
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 180, 216, 0.1);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
   border-radius: 9999px;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s,
+    height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s,
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   max-width: 1200px;
   width: 90%;
   overflow: hidden;
 }
 
+.nav:hover {
+  box-shadow: 0 8px 32px rgba(0, 180, 216, 0.1), 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
 .nav.scrolled {
   top: 20px;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.98);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: rgba(0, 180, 216, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 180, 216, 0.12);
+  transition:
+    width 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .navInner {
@@ -31,40 +47,51 @@
   justify-content: space-between;
   width: 100%;
   padding: 0 2rem;
-  height: 72px;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  height: 64px;
+  transition:
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s,
+    height 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.25s;
 }
 
 .scrolled .navInner {
   padding: 0;
   justify-content: center;
-  height: 64px;
+  height: 60px;
+  transition:
+    padding 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .navLeft {
   display: flex;
   align-items: center;
   opacity: 1;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.25s ease 0.3s, transform 0.25s ease 0.3s;
 }
 
 .navLeft.hidden {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.9);
   pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   cursor: pointer;
-  color: #1a1a2e;
+  color: #00B4D8;
+  transition: all 0.3s ease;
+}
+
+.logo:hover {
+  color: #0096c7;
 }
 
 .logoText {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
-  font-size: 1.2rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1a1a2e;
   letter-spacing: -0.5px;
@@ -79,30 +106,36 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #1a1a2e;
+  color: #00B4D8;
   opacity: 0;
   pointer-events: none;
-  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .logoMinimized.visible {
   opacity: 1;
   transform: translate(-50%, -50%) scale(1);
   pointer-events: auto;
+  transition: opacity 0.25s ease 0.5s, transform 0.25s ease 0.5s;
+}
+
+.logoMinimized:hover {
+  color: #0096c7;
 }
 
 .navCenter {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.5rem;
   opacity: 1;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.25s ease 0.3s, transform 0.25s ease 0.3s;
 }
 
 .navCenter.hidden {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.9);
   pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .navLink {
@@ -112,58 +145,64 @@
   padding: 0.5rem 1rem;
   border: none;
   background: transparent;
-  color: rgba(26, 26, 46, 0.55);
+  color: rgba(26, 26, 46, 0.6);
   font-family: var(--font-primary, 'Inter', sans-serif);
   font-size: 0.9rem;
   font-weight: 500;
   cursor: pointer;
   border-radius: 8px;
-  transition: color 0.2s ease, background 0.2s ease;
+  transition: all 0.25s ease;
 }
 
 .navLink:hover {
-  color: #1a1a2e;
-  background: rgba(0, 180, 216, 0.06);
+  color: #00B4D8;
+  background: rgba(0, 180, 216, 0.08);
 }
 
 .navRight {
   display: flex;
   align-items: center;
   opacity: 1;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: opacity 0.25s ease 0.3s, transform 0.25s ease 0.3s;
 }
 
 .navRight.hidden {
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.9);
   pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .bookDemoBtn {
-  padding: 0.6rem 1.5rem;
-  background: #ffffff;
+  padding: 0.55rem 1.4rem;
+  background: transparent;
   color: #1a1a2e;
-  border: 1.5px solid #1a1a2e;
-  border-radius: 8px;
+  border: 1.5px solid rgba(26, 26, 46, 0.2);
+  border-radius: 9999px;
   font-family: var(--font-primary, 'Inter', sans-serif);
   font-size: 0.875rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .bookDemoBtn:hover {
   background: #00B4D8;
   color: #ffffff;
   border-color: #00B4D8;
-  box-shadow: 0 4px 15px rgba(0, 180, 216, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.35);
+  transform: translateY(-1px);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+  .nav {
+    width: 95%;
+  }
+
   .navInner {
-    padding: 0 1rem;
-    height: 60px;
+    padding: 0 1.25rem;
+    height: 56px;
   }
 
   .navCenter {
@@ -173,5 +212,14 @@
   .bookDemoBtn {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+  }
+
+  .nav.scrolled {
+    width: 52px;
+    height: 52px;
+  }
+
+  .scrolled .navInner {
+    height: 52px;
   }
 }

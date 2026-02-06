@@ -305,6 +305,152 @@
   }
 }
 
+/* How It Works Section */
+.howItWorks {
+  padding: 6rem 0;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.sectionTag {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: rgba(0, 180, 216, 0.2);
+  border: 1px solid rgba(0, 180, 216, 0.5);
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #0096c7;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.sectionTitle {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 2.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 1rem;
+  letter-spacing: -0.02em;
+}
+
+.sectionSubtitle {
+  font-size: 1.1rem;
+  color: rgba(26, 26, 46, 0.55);
+  margin: 0;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+
+.stepCard {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(0, 180, 216, 0.1);
+  border-radius: 20px;
+  padding: 2.5rem;
+  transition: all 0.3s ease;
+}
+
+.stepCard:hover {
+  border-color: rgba(0, 180, 216, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 180, 216, 0.08);
+}
+
+.stepCardReverse {
+  grid-template-columns: 1.2fr 1fr;
+}
+
+.stepCardReverse .stepInfo {
+  order: 2;
+}
+
+.stepCardReverse .stepImageWrapper {
+  order: 1;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.stepNumber {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #00B4D8 0%, #0096c7 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.3);
+}
+
+.stepNumber span {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.stepTitle {
+  font-family: var(--font-heading, 'Space Grotesk', sans-serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.stepDescription {
+  font-size: 1rem;
+  color: rgba(26, 26, 46, 0.6);
+  line-height: 1.7;
+  margin: 0;
+}
+
+.stepImageWrapper {
+  position: relative;
+}
+
+.stepImagePlaceholder {
+  background: linear-gradient(135deg, #f8fbfc 0%, #f0f7f9 100%);
+  border: 2px dashed rgba(0, 180, 216, 0.2);
+  border-radius: 16px;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(0, 180, 216, 0.4);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.stepImage {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
 /* Responsive */
 @media (max-width: 1024px) {
   .heroContent {
@@ -318,6 +464,20 @@
 
   .heroImageWrapper {
     padding: 1rem;
+  }
+
+  .stepCard,
+  .stepCardReverse {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .stepCardReverse .stepInfo {
+    order: 1;
+  }
+
+  .stepCardReverse .stepImageWrapper {
+    order: 2;
   }
 }
 
@@ -360,5 +520,29 @@
   .floater1,
   .floater2 {
     display: none;
+  }
+
+  .howItWorks {
+    padding: 4rem 0;
+  }
+
+  .sectionTitle {
+    font-size: 2rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 1rem;
+  }
+
+  .stepCard {
+    padding: 1.5rem;
+  }
+
+  .stepTitle {
+    font-size: 1.5rem;
+  }
+
+  .stepImagePlaceholder {
+    min-height: 240px;
   }
 }
