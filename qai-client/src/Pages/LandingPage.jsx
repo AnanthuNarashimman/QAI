@@ -1,7 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import Navbar from '../Components/Navbar';
-import { Star, StarHalf, Play, Zap, CheckCircle } from 'lucide-react';
+import {
+  Star, StarHalf, Play, Zap, CheckCircle,
+  MousePointerClick, Palette, AlertTriangle, Lightbulb,
+  TrendingUp, Minus, Globe
+} from 'lucide-react';
 import hero from "../assets/Hero.png";
 
 import sc1 from "../assets/SC1.png";
@@ -206,6 +210,316 @@ function LandingPage() {
                 <img src={sc4} alt="Download report as PDF" className={styles.stepImage} />
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* Features / Insights Section */}
+        <section className={styles.features}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>Features</span>
+            <h2 className={styles.sectionTitle}>Discover actionable insights</h2>
+            <p className={styles.sectionSubtitle}>
+              Every audit delivers a rich, detailed report packed with scores, issues, and recommendations
+            </p>
+          </div>
+
+          <div className={styles.featuresGrid}>
+
+            {/* Feature 1: Score Overview */}
+            <div className={styles.featureBlock}>
+              <div className={styles.featureText}>
+                <h3 className={styles.featureTitle}>At-a-Glance Scoring</h3>
+                <p className={styles.featureDescription}>
+                  Instantly understand your site's health with overall scores,
+                  individual category gauges, and letter grades — all calculated
+                  from real page analysis.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>Overall score with progress bar</li>
+                  <li>CTA effectiveness &amp; theme consistency gauges</li>
+                  <li>A-F letter grading per category</li>
+                </ul>
+              </div>
+              <div className={styles.featureVisual}>
+                {/* Mock Overall Bar */}
+                <div className={styles.mockSection}>
+                  <div className={styles.mockOverallBar}>
+                    <div className={styles.mockOverallBarInfo}>
+                      <span className={styles.mockOverallBarLabel}>Overall</span>
+                      <span className={styles.mockOverallBarValue} style={{ color: '#f59e0b' }}>69 / 100</span>
+                    </div>
+                    <div className={styles.mockOverallBarTrack}>
+                      <div className={styles.mockOverallBarFill} style={{ width: '69%', background: '#f59e0b' }} />
+                    </div>
+                  </div>
+
+                  {/* Mock Gauge Cards */}
+                  <div className={styles.mockScoresRow}>
+                    <div className={styles.mockGaugeCard}>
+                      <div className={styles.mockGaugeHeader}>
+                        <div className={styles.mockGaugeIcon} style={{ background: 'rgba(74, 222, 128, 0.1)' }}>
+                          <MousePointerClick size={16} color="#4ade80" />
+                        </div>
+                        <div className={styles.mockGaugeMeta}>
+                          <span className={styles.mockGaugeName}>CTA Score</span>
+                          <span className={styles.mockGaugeIssues}>3 issues found</span>
+                        </div>
+                        <span className={styles.mockGaugeGrade} style={{ color: '#4ade80' }}>B+</span>
+                      </div>
+                      <div className={styles.mockGaugeVisual}>
+                        <svg width="120" height="120" viewBox="0 0 150 150">
+                          <circle cx="75" cy="75" r="58" fill="none" stroke="rgba(0,180,216,0.08)" strokeWidth="10" />
+                          <circle cx="75" cy="75" r="58" fill="none" stroke="#4ade80" strokeWidth="10"
+                            strokeDasharray="364.42" strokeDashoffset="65.60"
+                            strokeLinecap="round" transform="rotate(-90 75 75)" />
+                          <text x="75" y="70" textAnchor="middle" className={styles.mockGaugeScore}>82</text>
+                          <text x="75" y="88" textAnchor="middle" className={styles.mockGaugeLabel}>/ 100</text>
+                        </svg>
+                      </div>
+                      <div className={styles.mockGaugeSummary}>
+                        <TrendingUp size={13} color="#4ade80" />
+                        <span style={{ color: '#4ade80' }}>Good</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.mockGaugeCard}>
+                      <div className={styles.mockGaugeHeader}>
+                        <div className={styles.mockGaugeIcon} style={{ background: 'rgba(245, 158, 11, 0.1)' }}>
+                          <Palette size={16} color="#f59e0b" />
+                        </div>
+                        <div className={styles.mockGaugeMeta}>
+                          <span className={styles.mockGaugeName}>Theme Score</span>
+                          <span className={styles.mockGaugeIssues}>5 issues found</span>
+                        </div>
+                        <span className={styles.mockGaugeGrade} style={{ color: '#f59e0b' }}>C</span>
+                      </div>
+                      <div className={styles.mockGaugeVisual}>
+                        <svg width="120" height="120" viewBox="0 0 150 150">
+                          <circle cx="75" cy="75" r="58" fill="none" stroke="rgba(0,180,216,0.08)" strokeWidth="10" />
+                          <circle cx="75" cy="75" r="58" fill="none" stroke="#f59e0b" strokeWidth="10"
+                            strokeDasharray="364.42" strokeDashoffset="160.34"
+                            strokeLinecap="round" transform="rotate(-90 75 75)" />
+                          <text x="75" y="70" textAnchor="middle" className={styles.mockGaugeScore}>56</text>
+                          <text x="75" y="88" textAnchor="middle" className={styles.mockGaugeLabel}>/ 100</text>
+                        </svg>
+                      </div>
+                      <div className={styles.mockGaugeSummary}>
+                        <Minus size={13} color="#f59e0b" />
+                        <span style={{ color: '#f59e0b' }}>Needs Work</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 2: CTA Efficiency */}
+            <div className={`${styles.featureBlock} ${styles.featureBlockReverse}`}>
+              <div className={styles.featureText}>
+                <h3 className={styles.featureTitle}>CTA Efficiency Analysis</h3>
+                <p className={styles.featureDescription}>
+                  Every call-to-action is evaluated for visibility, contrast, copy clarity,
+                  and placement — so you never lose conversions to poor UX.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>Contrast ratio checks against WCAG standards</li>
+                  <li>Copy effectiveness scoring</li>
+                  <li>Placement &amp; visibility analysis</li>
+                </ul>
+              </div>
+              <div className={styles.featureVisual}>
+                <div className={styles.mockSection}>
+                  <div className={styles.mockSectionTitle}>
+                    <MousePointerClick size={15} color="#00B4D8" />
+                    CTA Issues
+                    <span className={styles.mockCount}>(3)</span>
+                  </div>
+
+                  <div className={styles.mockIssueCard}>
+                    <div className={styles.mockIssueBadge}>
+                      <MousePointerClick size={14} />
+                      <span>hero-cta-button</span>
+                    </div>
+                    <div className={styles.mockIssueBody}>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(245, 158, 11, 0.05)', borderLeftColor: 'rgba(245, 158, 11, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(245, 158, 11, 0.8)' }}>
+                          <AlertTriangle size={11} /> Issue
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          CTA button has low contrast ratio (2.8:1) against the background and uses vague copy &quot;Click Here&quot; — does not communicate value.
+                        </p>
+                      </div>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(74, 222, 128, 0.05)', borderLeftColor: 'rgba(74, 222, 128, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(74, 222, 128, 0.8)' }}>
+                          <Lightbulb size={11} /> Recommendation
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Increase contrast to at least 4.5:1 and use action-oriented copy like &quot;Start Free Trial&quot; or &quot;Get Started Today&quot;.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.mockIssueCard}>
+                    <div className={styles.mockIssueBadge}>
+                      <MousePointerClick size={14} />
+                      <span>pricing-signup-btn</span>
+                    </div>
+                    <div className={styles.mockIssueBody}>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(245, 158, 11, 0.05)', borderLeftColor: 'rgba(245, 158, 11, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(245, 158, 11, 0.8)' }}>
+                          <AlertTriangle size={11} /> Issue
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Sign-up button is below the fold on mobile viewports and competes with 3 other CTAs in the same section.
+                        </p>
+                      </div>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(74, 222, 128, 0.05)', borderLeftColor: 'rgba(74, 222, 128, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(74, 222, 128, 0.8)' }}>
+                          <Lightbulb size={11} /> Recommendation
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Make the primary CTA sticky on mobile and reduce competing actions to a single clear choice.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 3: Theme Consistency */}
+            <div className={styles.featureBlock}>
+              <div className={styles.featureText}>
+                <h3 className={styles.featureTitle}>Theme Consistency Review</h3>
+                <p className={styles.featureDescription}>
+                  Fonts, colors, spacing, and visual hierarchy are checked across
+                  every page to ensure a cohesive, professional design system.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>Font weight &amp; typography consistency</li>
+                  <li>Color palette adherence</li>
+                  <li>Spacing &amp; layout uniformity</li>
+                </ul>
+              </div>
+              <div className={styles.featureVisual}>
+                <div className={styles.mockSection}>
+                  <div className={styles.mockSectionTitle}>
+                    <Palette size={15} color="#00B4D8" />
+                    Theme Issues
+                    <span className={styles.mockCount}>(5)</span>
+                  </div>
+
+                  <div className={styles.mockIssueCard}>
+                    <div className={styles.mockIssueBadge}>
+                      <Palette size={14} />
+                      <span>nav-section</span>
+                    </div>
+                    <div className={styles.mockIssueBody}>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(245, 158, 11, 0.05)', borderLeftColor: 'rgba(245, 158, 11, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(245, 158, 11, 0.8)' }}>
+                          <AlertTriangle size={11} /> Issue
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Navigation uses 4 different font weights inconsistently, breaking visual hierarchy and reducing scanability.
+                        </p>
+                      </div>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(74, 222, 128, 0.05)', borderLeftColor: 'rgba(74, 222, 128, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(74, 222, 128, 0.8)' }}>
+                          <Lightbulb size={11} /> Recommendation
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Standardize to 2 font weights — regular for links, semibold for the active state.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.mockIssueCard}>
+                    <div className={styles.mockIssueBadge}>
+                      <Palette size={14} />
+                      <span>footer-section</span>
+                    </div>
+                    <div className={styles.mockIssueBody}>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(245, 158, 11, 0.05)', borderLeftColor: 'rgba(245, 158, 11, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(245, 158, 11, 0.8)' }}>
+                          <AlertTriangle size={11} /> Issue
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Footer background (#1a1a2e) clashes with the light color palette used across the rest of the site.
+                        </p>
+                      </div>
+                      <div className={styles.mockIssueBlock} style={{ background: 'rgba(74, 222, 128, 0.05)', borderLeftColor: 'rgba(74, 222, 128, 0.5)' }}>
+                        <span className={styles.mockIssueLabel} style={{ color: 'rgba(74, 222, 128, 0.8)' }}>
+                          <Lightbulb size={11} /> Recommendation
+                        </span>
+                        <p className={styles.mockIssueText}>
+                          Use a softer dark shade or match the site&apos;s neutral palette for a smoother visual transition.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Feature 4: Page-by-Page Breakdown */}
+            <div className={`${styles.featureBlock} ${styles.featureBlockReverse}`}>
+              <div className={styles.featureText}>
+                <h3 className={styles.featureTitle}>Page-by-Page Breakdown</h3>
+                <p className={styles.featureDescription}>
+                  Each crawled page gets its own detailed analysis with individual
+                  CTA and theme scores, so you know exactly where to focus.
+                </p>
+                <ul className={styles.featureList}>
+                  <li>Individual page scoring</li>
+                  <li>CTA count per page</li>
+                  <li>Multi-page comparison at a glance</li>
+                </ul>
+              </div>
+              <div className={styles.featureVisual}>
+                <div className={styles.mockSection}>
+                  <div className={styles.mockSectionTitle}>
+                    <Globe size={15} color="#00B4D8" />
+                    Page-by-Page Breakdown
+                  </div>
+                  <div className={styles.mockPageCard}>
+                    <div className={styles.mockPageHeader}>
+                      <Globe size={13} color="#00B4D8" />
+                      <span className={styles.mockPageUrl}>example.com/</span>
+                    </div>
+                    <div className={styles.mockPageScores}>
+                      <span className={styles.mockMiniScore}>CTA: <b style={{ color: '#4ade80' }}>85</b></span>
+                      <span className={styles.mockMiniScore}>Theme: <b style={{ color: '#f59e0b' }}>62</b></span>
+                      <span className={styles.mockMiniScore}>CTAs Found: <b>4</b></span>
+                    </div>
+                  </div>
+                  <div className={styles.mockPageCard}>
+                    <div className={styles.mockPageHeader}>
+                      <Globe size={13} color="#00B4D8" />
+                      <span className={styles.mockPageUrl}>example.com/pricing</span>
+                    </div>
+                    <div className={styles.mockPageScores}>
+                      <span className={styles.mockMiniScore}>CTA: <b style={{ color: '#4ade80' }}>78</b></span>
+                      <span className={styles.mockMiniScore}>Theme: <b style={{ color: '#f59e0b' }}>51</b></span>
+                      <span className={styles.mockMiniScore}>CTAs Found: <b>6</b></span>
+                    </div>
+                  </div>
+                  <div className={styles.mockPageCard}>
+                    <div className={styles.mockPageHeader}>
+                      <Globe size={13} color="#00B4D8" />
+                      <span className={styles.mockPageUrl}>example.com/about</span>
+                    </div>
+                    <div className={styles.mockPageScores}>
+                      <span className={styles.mockMiniScore}>CTA: <b style={{ color: '#ef4444' }}>34</b></span>
+                      <span className={styles.mockMiniScore}>Theme: <b style={{ color: '#4ade80' }}>71</b></span>
+                      <span className={styles.mockMiniScore}>CTAs Found: <b>1</b></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
       </main>
