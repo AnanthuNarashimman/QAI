@@ -7,6 +7,7 @@ import hero from "../assets/Hero.png";
 import sc1 from "../assets/SC1.png";
 import sc2 from "../assets/sc2.png";
 import sc3 from "../assets/sc3.png";
+import sc4 from "../assets/sc4.png";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -103,7 +104,7 @@ function LandingPage() {
         <section className={styles.howItWorks}>
           <div className={styles.sectionHeader}>
             <span className={styles.sectionTag}>How It Works</span>
-            <h2 className={styles.sectionTitle}>Three steps to a perfect audit</h2>
+            <h2 className={styles.sectionTitle}>Four steps to a perfect audit</h2>
             <p className={styles.sectionSubtitle}>
               Our AI-powered agent handles the heavy lifting while you focus on what matters
             </p>
@@ -128,6 +129,14 @@ function LandingPage() {
               </div>
             </div>
 
+            {/* Connector 1: right to left */}
+            <div className={styles.stepConnector}>
+              <svg viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 350,0 C 350,50 150,30 150,80" className={styles.connectorPath} />
+                <polygon points="145,72 150,84 158,74" className={styles.connectorArrow} />
+              </svg>
+            </div>
+
             {/* Step 2 - Watch AI */}
             <div className={`${styles.stepCard} ${styles.stepCardReverse}`}>
               <div className={styles.stepInfo}>
@@ -146,6 +155,14 @@ function LandingPage() {
               </div>
             </div>
 
+            {/* Connector 2: left to right */}
+            <div className={styles.stepConnector}>
+              <svg viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 150,0 C 150,50 350,30 350,80" className={styles.connectorPath} />
+                <polygon points="342,74 350,84 355,72" className={styles.connectorArrow} />
+              </svg>
+            </div>
+
             {/* Step 3 - Get Report */}
             <div className={styles.stepCard}>
               <div className={styles.stepInfo}>
@@ -155,12 +172,38 @@ function LandingPage() {
                 <div className={styles.stepContent}>
                   <h3 className={styles.stepTitle}>Get Your Report</h3>
                   <p className={styles.stepDescription}>
-                    Download a comprehensive PDF report with all findings, severity ratings, and actionable recommendations. Share with your team or use it as a roadmap for improvements.
+                    Review a comprehensive report with all findings, severity ratings, and actionable recommendations organized by category and priority.
                   </p>
                 </div>
               </div>
               <div className={styles.stepImageWrapper}>
                 <img src={sc3} alt="Generated report" className={styles.stepImage} />
+              </div>
+            </div>
+
+            {/* Connector 3: right to left */}
+            <div className={styles.stepConnector}>
+              <svg viewBox="0 0 500 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M 350,0 C 350,50 150,30 150,80" className={styles.connectorPath} />
+                <polygon points="145,72 150,84 158,74" className={styles.connectorArrow} />
+              </svg>
+            </div>
+
+            {/* Step 4 - Download PDF */}
+            <div className={`${styles.stepCard} ${styles.stepCardReverse}`}>
+              <div className={styles.stepInfo}>
+                <div className={styles.stepNumber}>
+                  <span>04</span>
+                </div>
+                <div className={styles.stepContent}>
+                  <h3 className={styles.stepTitle}>Download Report as PDF</h3>
+                  <p className={styles.stepDescription}>
+                    Export your audit results as a professionally formatted PDF. Share it with your team, stakeholders, or use it as a roadmap for improvements.
+                  </p>
+                </div>
+              </div>
+              <div className={styles.stepImageWrapper}>
+                <img src={sc4} alt="Download report as PDF" className={styles.stepImage} />
               </div>
             </div>
           </div>

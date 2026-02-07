@@ -350,24 +350,73 @@
 .stepsContainer {
   display: flex;
   flex-direction: column;
-  gap: 3rem;
+  gap: 0;
 }
 
 .stepCard {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1.2fr;
   gap: 3rem;
   align-items: center;
-  background: #ffffff;
-  border: 1px solid rgba(0, 180, 216, 0.1);
+  background-color: #ffffff;
+  background-image: radial-gradient(circle, rgba(0, 180, 216, 0.7) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  border: 1.5px solid rgba(0, 180, 216, 0.25);
   border-radius: 20px;
   padding: 2.5rem;
-  transition: all 0.3s ease;
+  box-shadow: 0 2px 12px rgba(0, 180, 216, 0.06);
+  transition: all 0.5s ease;
 }
 
 .stepCard:hover {
-  border-color: rgba(0, 180, 216, 0.25);
-  box-shadow: 0 12px 40px rgba(0, 180, 216, 0.08);
+  border-color: rgba(0, 180, 216, 0.45);
+  box-shadow: 0 12px 40px rgba(0, 180, 216, 0.1);
+  background-size: 25px 25px;
+}
+
+/* Curved SVG connectors between cards */
+.stepConnector {
+  display: flex;
+  justify-content: center;
+  height: 80px;
+  width: 100%;
+  pointer-events: none;
+}
+
+.stepConnector svg {
+  width: 70%;
+  height: 100%;
+  overflow: visible;
+}
+
+.connectorPath {
+  fill: none;
+  stroke: #00B4D8;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 8 6;
+  animation: flowDash 1.2s linear infinite;
+}
+
+.connectorArrow {
+  fill: #00B4D8;
+  animation: pulseArrow 2s ease-in-out infinite;
+}
+
+@keyframes flowDash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes pulseArrow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 .stepCardReverse {
@@ -478,6 +527,10 @@
 
   .stepCardReverse .stepImageWrapper {
     order: 2;
+  }
+
+  .stepConnector {
+    display: none;
   }
 }
 
