@@ -12,9 +12,9 @@ import {
 import hero from "../assets/Hero.png";
 
 import sc1 from "../assets/SC1.png";
-import sc2 from "../assets/sc2.png";
-import sc3 from "../assets/sc3.png";
-import sc4 from "../assets/sc4.png";
+import sc2 from "../assets/Sc2.png";
+import sc3 from "../assets/Sc3.png";
+import sc4 from "../assets/Sc4.png";
 
 function LandingPage() {
   const navigate = useNavigate();
