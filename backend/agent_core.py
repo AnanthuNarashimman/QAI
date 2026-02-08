@@ -6,6 +6,7 @@ import json
 import logging
 import re
 from pydantic import BaseModel, Field
+import os
 from typing import List
 
 load_dotenv()
@@ -388,7 +389,11 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     # correspond to viewports in order. We take the last max_viewport screenshots
     # from the list (working from the end avoids blank/loading screenshots at the start).
     screenshots = {}
-    if viewport_numbers:
+    
+    # Check if screenshots are enabled via environment variable
+    enable_screenshots = os.getenv('ENABLE_SCREENSHOTS', 'no').lower() == 'yes'
+    
+    if enable_screenshots and viewport_numbers:
         try:
             screenshot_paths = result.screenshot_paths()
             # Filter out None entries (e.g., pre-navigation step)
@@ -410,6 +415,10 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
                         screenshots[vp_num] = base64.b64encode(f.read()).decode('utf-8')
         except Exception as e:
             print(f"Screenshot mapping failed for {url}: {e}")
+    elif not enable_screenshots and viewport_numbers:
+        # Add placeholder for each viewport when screenshots are disabled
+        for vp_num in viewport_numbers:
+            screenshots[vp_num] = "placeholder"
 
     return validation_result, screenshots
     

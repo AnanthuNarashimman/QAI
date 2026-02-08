@@ -115,7 +115,7 @@ function IssueCard({ elementName, issues, recommendations, type, screenshot }) {
         </div>
 
         {/* Right: screenshot or placeholder */}
-        {screenshot ? (
+        {screenshot && screenshot !== "placeholder" ? (
           <div className={styles.screenshotWrap}>
             <img
               src={`data:image/jpeg;base64,${screenshot}`}

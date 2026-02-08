@@ -2,6 +2,7 @@ flask
 flask-socketio
 flask-cors
 google-generativeai
+browser-use
 uv
 playwright
 networkx
