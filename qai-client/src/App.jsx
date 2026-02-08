@@ -5,6 +5,7 @@ import AuditPage from './AuditPage/AuditPage'
 import ReportPage from './ReportPage/ReportPage'
 import LoginPage from './Pages/LoginPage'
 import ResourcesPage from './ResourcesPage/ResourcesPage'
+import HistoryPage from './HistoryPage/HistoryPage'
 
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
@@ -19,6 +20,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/agent" element={<ProtectedRoute><AgentPage /></ProtectedRoute>} />
         <Route path="/audit" element={<ProtectedRoute><AuditPage /></ProtectedRoute>} />
+        <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
         <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
         <Route path="/report" element={<ReportPage />} />
       </Routes>

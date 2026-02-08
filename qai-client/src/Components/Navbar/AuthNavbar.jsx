@@ -30,7 +30,10 @@ function AuthNavbar() {
           >
             Agent
           </button>
-          <button className={styles.navLink} disabled>
+          <button
+            className={`${styles.navLink} ${isActive('/history') ? styles.navLinkActive : ''}`}
+            onClick={() => navigate('/history')}
+          >
             <History size={16} />
             History
           </button>
