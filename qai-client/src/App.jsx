@@ -22,7 +22,7 @@ function App() {
         <Route path="/audit" element={<ProtectedRoute><AuditPage /></ProtectedRoute>} />
         <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
         <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
-        <Route path="/report" element={<ReportPage />} />
+        <Route path="/report" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
 import styles from './ReportPage.module.css';
-import Navbar from '../Components/Navbar';
+import AuthNavbar from '../Components/Navbar/AuthNavbar';
 import {
   Globe, Download, ArrowLeft, AlertTriangle, Lightbulb,
   MousePointerClick, Palette, Target, Users, Hash, Calendar,
@@ -145,7 +145,7 @@ function ReportPage() {
   if (!reportData) {
     return (
       <div className={styles.container}>
-        <Navbar />
+        <AuthNavbar />
         <main className={styles.main}>
           <p>No report data available.</p>
           <button className={styles.backBtn} onClick={() => navigate(-1)}>
@@ -213,7 +213,7 @@ function ReportPage() {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <AuthNavbar />
 
       <main className={styles.main}>
         <div className={styles.reportContent} ref={reportRef}>
