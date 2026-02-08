@@ -1,10 +1,13 @@
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import styles from './LandingPage.module.css';
 import Navbar from '../Components/Navbar';
 import {
   Star, StarHalf, Play, Zap, CheckCircle,
   MousePointerClick, Palette, AlertTriangle, Lightbulb,
-  TrendingUp, Minus, Globe
+  TrendingUp, Minus, Globe, Github, ArrowRight,
+  GitPullRequest, GitCommit, CircleDot, Search,
+  Shield, Twitter, Linkedin, Mail, Send
 } from 'lucide-react';
 import hero from "../assets/Hero.png";
 
@@ -15,6 +18,18 @@ import sc4 from "../assets/sc4.png";
 
 function LandingPage() {
   const navigate = useNavigate();
+  const [contactForm, setContactForm] = useState({ name: '', subject: '', message: '' });
+
+  const handleContactChange = (e) => {
+    setContactForm({ ...contactForm, [e.target.name]: e.target.value });
+  };
+
+  const handleContactSend = (e) => {
+    e.preventDefault();
+    const { name, subject, message } = contactForm;
+    const body = `Hi,\n\n${message}\n\nFrom,\n${name}`;
+    window.location.href = `mailto:ananthu.narashimman@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  };
 
   return (
     <div className={styles.container}>
@@ -105,7 +120,7 @@ function LandingPage() {
         </section>
 
         {/* How It Works Section */}
-        <section className={styles.howItWorks}>
+        <section id="how-it-works" className={styles.howItWorks}>
           <div className={styles.sectionHeader}>
             <span className={styles.sectionTag}>How It Works</span>
             <h2 className={styles.sectionTitle}>Four steps to a perfect audit</h2>
@@ -214,7 +229,7 @@ function LandingPage() {
         </section>
 
         {/* Features / Insights Section */}
-        <section className={styles.features}>
+        <section id="features" className={styles.features}>
           <div className={styles.sectionHeader}>
             <span className={styles.sectionTag}>Features</span>
             <h2 className={styles.sectionTitle}>Discover actionable insights</h2>
@@ -522,7 +537,261 @@ function LandingPage() {
 
           </div>
         </section>
+
+        {/* CTA Section */}
+        <section id="get-involved" className={styles.ctaSection}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>Get Involved</span>
+            <h2 className={styles.sectionTitle}>Start auditing or start contributing</h2>
+            <p className={styles.sectionSubtitle}>
+              Jump into your first audit or help shape the future of VibeAudit
+            </p>
+          </div>
+
+          <div className={styles.ctaGrid}>
+            {/* Audit CTA */}
+            <div className={styles.ctaCard}>
+              <div className={styles.ctaMockup}>
+                <div className={styles.ctaMockupWindow}>
+                  <div className={styles.ctaMockupDots}>
+                    <span /><span /><span />
+                  </div>
+                  <div className={styles.ctaMockupBody}>
+                    <div className={styles.ctaMockupField}>
+                      <Search size={13} color="rgba(26,26,46,0.3)" />
+                      <span>https://yoursite.com</span>
+                    </div>
+                    <div className={styles.ctaMockupRow}>
+                      <div className={styles.ctaMockupChip}>
+                        <CircleDot size={10} color="#4ade80" />
+                        <span>5 pages</span>
+                      </div>
+                      <div className={styles.ctaMockupChip}>
+                        <CircleDot size={10} color="#00B4D8" />
+                        <span>SaaS</span>
+                      </div>
+                    </div>
+                    <div className={styles.ctaMockupBar}>
+                      <div className={styles.ctaMockupBarFill} />
+                    </div>
+                    <div className={styles.ctaMockupScores}>
+                      <div className={styles.ctaMockupScoreItem}>
+                        <span className={styles.ctaMockupScoreValue} style={{ color: '#4ade80' }}>82</span>
+                        <span className={styles.ctaMockupScoreLabel}>CTA</span>
+                      </div>
+                      <div className={styles.ctaMockupScoreItem}>
+                        <span className={styles.ctaMockupScoreValue} style={{ color: '#f59e0b' }}>56</span>
+                        <span className={styles.ctaMockupScoreLabel}>Theme</span>
+                      </div>
+                      <div className={styles.ctaMockupScoreItem}>
+                        <span className={styles.ctaMockupScoreValue} style={{ color: '#4ade80' }}>B+</span>
+                        <span className={styles.ctaMockupScoreLabel}>Grade</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.ctaCardText}>
+                <h3 className={styles.ctaCardTitle}>Run Your First Audit</h3>
+                <p className={styles.ctaCardDescription}>
+                  Enter a URL, configure your preferences, and get a comprehensive AI-powered report in minutes.
+                </p>
+                <button className={styles.ctaPrimary} onClick={() => navigate('/agent')}>
+                  Get Started <ArrowRight size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* GitHub CTA */}
+            <div className={styles.ctaCard}>
+              <div className={styles.ctaMockup}>
+                <div className={styles.ctaMockupTerminal}>
+                  <div className={styles.ctaMockupDots}>
+                    <span /><span /><span />
+                  </div>
+                  <div className={styles.ctaMockupCode}>
+                    <div className={styles.codeLine}>
+                      <span className={styles.codePrompt}>$</span>
+                      <span className={styles.codeCmd}>git clone</span>
+                      <span className={styles.codeArg}> vibeaudit</span>
+                    </div>
+                    <div className={styles.codeLine}>
+                      <span className={styles.codePrompt}>$</span>
+                      <span className={styles.codeCmd}>cd</span>
+                      <span className={styles.codeArg}> vibeaudit</span>
+                    </div>
+                    <div className={styles.codeLine}>
+                      <span className={styles.codePrompt}>$</span>
+                      <span className={styles.codeCmd}>npm install</span>
+                    </div>
+                    <div className={`${styles.codeLine} ${styles.codeLineSuccess}`}>
+                      <span className={styles.codeOutput}>✓ Ready to contribute!</span>
+                    </div>
+                  </div>
+                  <div className={styles.ctaMockupPRs}>
+                    <div className={styles.ctaPR}>
+                      <GitPullRequest size={13} color="#4ade80" />
+                      <span className={styles.ctaPRTitle}>Add accessibility scoring</span>
+                      <span className={styles.ctaPRTag}>merged</span>
+                    </div>
+                    <div className={styles.ctaPR}>
+                      <GitPullRequest size={13} color="#00B4D8" />
+                      <span className={styles.ctaPRTitle}>Improve PDF export layout</span>
+                      <span className={styles.ctaPRTagOpen}>open</span>
+                    </div>
+                    <div className={styles.ctaPR}>
+                      <GitCommit size={13} color="rgba(26,26,46,0.3)" />
+                      <span className={styles.ctaPRTitle}>Fix crawl depth config</span>
+                      <span className={styles.ctaPRTag}>merged</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className={styles.ctaCardText}>
+                <h3 className={styles.ctaCardTitle}>Contribute on GitHub</h3>
+                <p className={styles.ctaCardDescription}>
+                  VibeAudit is open source. Report bugs, suggest features, or submit a pull request.
+                </p>
+                <a
+                  href="https://github.com/AnanthuNarashimman/QAI"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.ctaSecondary}
+                >
+                  <Github size={18} /> View Repository
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+        {/* Contact Section */}
+        <section id="contact" className={styles.contactSection}>
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTag}>Contact</span>
+            <h2 className={styles.sectionTitle}>Get in touch</h2>
+            <p className={styles.sectionSubtitle}>
+              Have a question, suggestion, or just want to say hi? Drop us a message.
+            </p>
+          </div>
+
+          <form className={styles.contactForm} onSubmit={handleContactSend}>
+            <div className={styles.contactRow}>
+              <div className={styles.contactField}>
+                <label className={styles.contactLabel}>Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your name"
+                  value={contactForm.name}
+                  onChange={handleContactChange}
+                  className={styles.contactInput}
+                  required
+                />
+              </div>
+              <div className={styles.contactField}>
+                <label className={styles.contactLabel}>Subject</label>
+                <input
+                  type="text"
+                  name="subject"
+                  placeholder="What's this about?"
+                  value={contactForm.subject}
+                  onChange={handleContactChange}
+                  className={styles.contactInput}
+                  required
+                />
+              </div>
+            </div>
+            <div className={styles.contactField}>
+              <label className={styles.contactLabel}>Message</label>
+              <textarea
+                name="message"
+                placeholder="Write your message here..."
+                value={contactForm.message}
+                onChange={handleContactChange}
+                className={styles.contactTextarea}
+                rows={5}
+                required
+              />
+            </div>
+            <button type="submit" className={styles.contactSendBtn}>
+              <Send size={16} />
+              Send Message
+            </button>
+          </form>
+        </section>
       </main>
+
+      {/* Footer */}
+      <footer className={styles.footer}>
+        <div className={styles.footerInner}>
+          <div className={styles.footerBrand}>
+            <div className={styles.footerLogo}>
+              <Shield size={22} />
+              <span>VibeAudit</span>
+            </div>
+            <p className={styles.footerTagline}>
+              AI-powered website audits that turn design chaos into clarity.
+            </p>
+          </div>
+
+          <div className={styles.footerLinks}>
+            <h4 className={styles.footerLinksTitle}>Navigation</h4>
+            <button className={styles.footerLink} onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
+              Home
+            </button>
+            <button className={styles.footerLink} onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
+              How It Works
+            </button>
+            <button className={styles.footerLink} onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}>
+              Features
+            </button>
+            <button className={styles.footerLink} onClick={() => document.getElementById('get-involved')?.scrollIntoView({ behavior: 'smooth' })}>
+              Get Involved
+            </button>
+            <button className={styles.footerLink} onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+              Contact
+            </button>
+          </div>
+
+          <div className={styles.footerLinks}>
+            <h4 className={styles.footerLinksTitle}>Quick Links</h4>
+            <button className={styles.footerLink} onClick={() => navigate('/agent')}>
+              Start Audit
+            </button>
+            <a
+              href="https://github.com/AnanthuNarashimman/QAI"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.footerLink}
+            >
+              GitHub Repo
+            </a>
+          </div>
+
+          <div className={styles.footerSocials}>
+            <h4 className={styles.footerLinksTitle}>Connect</h4>
+            <div className={styles.footerSocialIcons}>
+              <a
+                href="https://github.com/AnanthuNarashimman/QAI"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.footerSocialIcon}
+              >
+                <Github size={18} />
+              </a>
+              <a href="https://x.com/AnanthuN7652" target="_blank" rel="noopener noreferrer" className={styles.footerSocialIcon}>
+                <Twitter size={18} />
+              </a>
+              <a href="https://www.linkedin.com/in/ananthunarashimman/" target="_blank" rel="noopener noreferrer" className={styles.footerSocialIcon}>
+                <Linkedin size={18} />
+              </a>
+              <a href="mailto:ananthu.narashimman@gmail.com" className={styles.footerSocialIcon}>
+                <Mail size={18} />
+              </a>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
