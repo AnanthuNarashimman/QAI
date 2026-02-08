@@ -4,7 +4,7 @@ import styles from './LoginPage.module.css';
 import {
   Shield, Eye, EyeOff, LogIn, Info,
   Zap, CheckCircle, ShoppingCart, Image,
-  BarChart3, Newspaper
+  BarChart3, Newspaper, ArrowLeft
 } from 'lucide-react';
 
 function LoginPage() {
@@ -161,6 +161,11 @@ function LoginPage() {
 
       {/* Right Panel - Form */}
       <div className={styles.rightPanel}>
+        <button className={styles.backButton} onClick={() => navigate('/')}>
+          <ArrowLeft size={18} />
+          Back to Home
+        </button>
+        
         <div className={styles.formWrapper}>
           <div className={styles.formHeader}>
             <h2 className={styles.formTitle}>Welcome back</h2>

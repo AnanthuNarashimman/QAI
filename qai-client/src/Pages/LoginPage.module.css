@@ -83,7 +83,7 @@
 .illustrations {
   position: relative;
   height: 380px;
-  margin-top: 1.25rem;
+  margin-top: 1.5rem;
 }
 
 .illustrationCard {
@@ -106,7 +106,7 @@
 /* E-commerce mockup */
 .card1 {
   top: 0;
-  left: 0;
+  left: -50px;
   width: 200px;
   animation: floatSlow 4s ease-in-out infinite;
   z-index: 2;
@@ -219,7 +219,7 @@
 /* Portfolio mockup */
 .card2 {
   top: 0;
-  right: 0;
+  right: -50px;
   width: 200px;
   animation: floatSlow 4s ease-in-out infinite;
   animation-delay: 1s;
@@ -257,7 +257,7 @@
 /* SaaS Dashboard mockup */
 .card3 {
   bottom: 0;
-  left: 0;
+  left: 20px;
   width: 195px;
   animation: floatSlow 4s ease-in-out infinite;
   animation-delay: 2s;
@@ -310,7 +310,7 @@
 /* Blog mockup */
 .card4 {
   bottom: 0;
-  right: 0;
+  right: 20px;
   width: 195px;
   animation: floatSlow 4s ease-in-out infinite;
   animation-delay: 3s;
@@ -381,7 +381,7 @@
 }
 
 .badge1 {
-  top: 50%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -55px);
   animation: floatMiddle 3.5s ease-in-out infinite;
@@ -390,7 +390,7 @@
 }
 
 .badge2 {
-  top: 50%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, 15px);
   animation: floatMiddle 3.5s ease-in-out infinite;
@@ -420,6 +420,7 @@
    RIGHT PANEL - FORM
    ══════════════════════════════════════════ */
 .rightPanel {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -427,6 +428,33 @@
   background: #ffffff;
   height: 100vh;
   overflow-y: auto;
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.backButton {
+  position: absolute;
+  top: 2rem;
+  right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  background: rgba(26, 26, 46, 0.05);
+  border: 1.5px solid rgba(26, 26, 46, 0.15);
+  border-radius: 10px;
+  color: #1a1a2e;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-family: var(--font-primary, 'Inter', sans-serif);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background: rgba(26, 26, 46, 0.08);
+  border-color: rgba(26, 26, 46, 0.25);
+  transform: translateX(-2px);
 }
 
 .formWrapper {
@@ -558,7 +586,7 @@
   gap: 10px;
   padding: 1rem 1.25rem;
   border-radius: 12px;
-  background: rgba(0, 180, 216, 0.06);
+  background: rgba(0, 180, 216, 0.3);
   border: 1px solid rgba(0, 180, 216, 0.15);
 }
 

@@ -65,7 +65,7 @@ function Navbar() {
         <div className={`${styles.navRight} ${isScrolled ? styles.hidden : ''}`}>
           <button
             className={styles.bookDemoBtn}
-            onClick={() => navigate('/agent')}
+            onClick={() => navigate('/login')}
           >
             Get started
           </button>

@@ -50,7 +50,7 @@ function LandingPage() {
               </p>
 
               <div className={styles.heroBtns}>
-                <button className={styles.getStartedBtn} onClick={() => navigate('/agent')}>
+                <button className={styles.getStartedBtn} onClick={() => navigate('/login')}>
                   Get started
                 </button>
                 <button className={styles.watchDemoBtn}>
@@ -596,7 +596,7 @@ function LandingPage() {
                 <p className={styles.ctaCardDescription}>
                   Enter a URL, configure your preferences, and get a comprehensive AI-powered report in minutes.
                 </p>
-                <button className={styles.ctaPrimary} onClick={() => navigate('/agent')}>
+                <button className={styles.ctaPrimary} onClick={() => navigate('/login')}>
                   Get Started <ArrowRight size={16} />
                 </button>
               </div>
@@ -755,7 +755,7 @@ function LandingPage() {
 
           <div className={styles.footerLinks}>
             <h4 className={styles.footerLinksTitle}>Quick Links</h4>
-            <button className={styles.footerLink} onClick={() => navigate('/agent')}>
+            <button className={styles.footerLink} onClick={() => navigate('/login')}>
               Start Audit
             </button>
             <a
