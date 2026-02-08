@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './AgentPage.module.css';
-import Navbar from '../Components/Navbar';
+import AuthNavbar from '../Components/Navbar/AuthNavbar';
 import { Sparkles, ChevronDown, Cpu, Check, Lock, PenLine, Globe, SwatchBook, BrainCog } from 'lucide-react';
 
 function AgentPage() {
@@ -11,6 +11,14 @@ function AgentPage() {
   const [intent, setIntent] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // Prefill intent if coming from ResourcesPage
+  useEffect(() => {
+    if (location.state?.prefilledIntent) {
+      setIntent(location.state.prefilledIntent);
+    }
+  }, [location.state]);
 
   const handleStartAudit = () => {
     // Clear previous error
@@ -39,7 +47,7 @@ function AgentPage() {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <AuthNavbar />
 
       {/* Hero Section */}
       <main className={styles.main}>
@@ -138,7 +146,12 @@ function AgentPage() {
         <div className={styles.helpSection}>
           <span className={styles.helpText}>Need Inspiration?</span>
           <span className={styles.helpIcon}><Globe size={20} /></span>
-          <a href="#" className={styles.helpLink}>Browse intent templates</a>
+          <button 
+            onClick={() => navigate('/resources')} 
+            className={styles.helpLink}
+          >
+            Browse intent templates
+          </button>
           <span className={styles.helpOr}>or</span>
           <span className={styles.helpIcon}><SwatchBook size={20}/></span>
           <a href="#" className={styles.helpLink}>View example audits</a>

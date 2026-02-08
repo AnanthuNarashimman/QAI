@@ -12,10 +12,21 @@ function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    navigate('/');
+    setError('');
+    
+    const validUsername = import.meta.env.VITE_AUTH_USERNAME;
+    const validPassword = import.meta.env.VITE_AUTH_PASSWORD;
+    
+    if (username === validUsername && password === validPassword) {
+      localStorage.setItem('isAuthenticated', 'true');
+      navigate('/agent');
+    } else {
+      setError('Invalid username or password. Please try again.');
+    }
   };
 
   return (
@@ -205,6 +216,12 @@ function LoginPage() {
                 </button>
               </div>
             </div>
+
+            {error && (
+              <div className={styles.errorMessage}>
+                {error}
+              </div>
+            )}
 
             <button type="submit" className={styles.submitBtn}>
               <LogIn size={18} />

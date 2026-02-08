@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import styles from './AuditPage.module.css';
-import Navbar from '../Components/Navbar';
+import AuthNavbar from '../Components/Navbar/AuthNavbar';
 import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool, FileText, ShieldCheck, ShieldX } from 'lucide-react';
 
 function getProgressIcon(message) {
@@ -277,7 +277,7 @@ function AuditPage() {
 
   return (
     <div className={styles.container}>
-      <Navbar />
+      <AuthNavbar />
 
       <main className={styles.main}>
         <div className={styles.topBar}>

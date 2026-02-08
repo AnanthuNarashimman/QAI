@@ -609,6 +609,11 @@
   text-decoration-color: rgba(0, 180, 216, 0.3);
   text-underline-offset: 3px;
   transition: all 0.2s ease;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
 }
 
 .helpLink:hover {

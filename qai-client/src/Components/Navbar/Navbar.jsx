@@ -1,11 +1,19 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
-import { Shield } from 'lucide-react';
+import { Shield, LogOut } from 'lucide-react';
 
 function Navbar() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
+  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+  const isProtectedRoute = ['/audit', '/agent'].includes(location.pathname);
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    navigate('/');
+  };
 
   useEffect(() => {
     let lastScrollY = window.scrollY;
@@ -63,12 +71,22 @@ function Navbar() {
         </div>
 
         <div className={`${styles.navRight} ${isScrolled ? styles.hidden : ''}`}>
-          <button
-            className={styles.bookDemoBtn}
-            onClick={() => navigate('/login')}
-          >
-            Get started
-          </button>
+          {isAuthenticated && isProtectedRoute ? (
+            <button
+              className={styles.logoutBtn}
+              onClick={handleLogout}
+            >
+              <LogOut size={18} />
+              Logout
+            </button>
+          ) : (
+            <button
+              className={styles.bookDemoBtn}
+              onClick={() => navigate('/login')}
+            >
+              Get started
+            </button>
+          )}
         </div>
       </div>
     </nav>
