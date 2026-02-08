@@ -9,10 +9,10 @@ from bfs_crawler import bfs_crawler
 from utils.intent import extract_audit_config
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins=["https://vibeaudit-delta.vercel.app", "http://localhost:5173", "http://localhost:5174"])
 
 # Initialize SocketIO with CORS support
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
+socketio = SocketIO(app, cors_allowed_origins=["https://vibeaudit-delta.vercel.app", "http://localhost:5173", "http://localhost:5174"], async_mode='threading')
 
 # Track active analysis sessions: sid -> threading.Event (stop flag)
 active_sessions = {}
