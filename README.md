@@ -98,8 +98,9 @@ flowchart LR
 | **Python Flask** | REST API server |
 | **Flask-SocketIO** | WebSocket server for real-time streaming |
 | **Google Generative AI** | Gemini 2.5 Flash Lite (intent parsing) + Gemini 3 Pro Preview (page analysis) |
-| **browser-use** | AI agent framework for autonomous browser interaction |
-| **Playwright** | Browser automation and screenshot capture |
+| **browser-use** | AI agent framework for autonomous browser interaction (local Playwright or cloud via API key) |
+| **Browser Use Cloud** | Managed cloud browser infrastructure for production deployment |
+| **Playwright** | Local browser automation and screenshot capture (dev) |
 | **NetworkX** | BFS graph-based page crawling |
 
 ### Deployment
@@ -152,13 +153,17 @@ python -m venv .venv
 .venv\Scripts\activate        # Windows
 # source .venv/bin/activate   # macOS/Linux
 pip install -r requirements.txt
-playwright install
+playwright install              # Only needed for local dev (skip if using Browser Use Cloud)
 ```
 
 Create a `.env` file in `backend/`:
 ```env
 GEMINI_API_KEY=your_gemini_api_key
 ENABLE_SCREENSHOTS=yes
+# Optional: Set this to use Browser Use Cloud instead of local Playwright
+# When set, the agent runs on cloud browser infrastructure (no local browser needed)
+# When absent, falls back to local Playwright (requires: playwright install)
+# BROWSER_USE_API_KEY=your_browser_use_api_key
 ```
 
 ```bash
@@ -210,7 +215,7 @@ flowchart TB
     end
 
     subgraph Agent["Browser Automation"]
-        D1["Playwright + browser-use"]
+        D1["browser-use\nCloud or Local Playwright"]
         D2["Viewport-by-Viewport Scroll"]
         D3["Screenshot Capture"]
         D4["CTA & Theme Analysis"]
