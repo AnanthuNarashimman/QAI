@@ -7,6 +7,8 @@ import LoginPage from './Pages/LoginPage'
 import ResourcesPage from './ResourcesPage/ResourcesPage'
 import HistoryPage from './HistoryPage/HistoryPage'
 
+import { Analytics } from "@vercel/analytics/react"
+
 const ProtectedRoute = ({ children }) => {
   const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
   return isAuthenticated ? children : <Navigate to="/login" replace />;
@@ -15,6 +17,7 @@ const ProtectedRoute = ({ children }) => {
 function App() {
   return (
     <BrowserRouter>
+      <Analytics />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
