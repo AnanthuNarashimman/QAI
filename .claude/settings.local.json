@@ -13,7 +13,9 @@
       "WebFetch(domain:docs.browserless.io)",
       "WebFetch(domain:github.com)",
       "WebFetch(domain:www.browserless.io)",
-      "WebFetch(domain:www.browserbase.com)"
+      "WebFetch(domain:www.browserbase.com)",
+      "WebFetch(domain:docs.cloud.browser-use.com)",
+      "WebFetch(domain:pypi.org)"
     ]
   }
 }
