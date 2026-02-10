@@ -8,7 +8,12 @@
       "Bash(python:*)",
       "Bash(find:*)",
       "Bash(.venvScriptspip install playwright)",
-      "Bash(uv pip install:*)"
+      "Bash(uv pip install:*)",
+      "WebFetch(domain:docs.browser-use.com)",
+      "WebFetch(domain:docs.browserless.io)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.browserless.io)",
+      "WebFetch(domain:www.browserbase.com)"
     ]
   }
 }
