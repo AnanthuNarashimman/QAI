@@ -1,6 +1,7 @@
 <div align="center">
 
 # VibeAudit
+<img width="1050" height="188" alt="Vibeaudit" src="https://github.com/user-attachments/assets/c9579331-c526-42fe-bf98-c07138636e60" />
 
 ### AI-Powered Website Design Auditor
 
