@@ -3,9 +3,12 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 import asyncio
 import os
+import platform
+import subprocess
 import threading
-import requests
+from pathlib import Path
 from urllib.parse import urlparse
+import requests
 from bfs_crawler import bfs_crawler
 from utils.intent import extract_audit_config
 
@@ -262,10 +265,49 @@ def root():
     }), 200
 
 
+def _chromium_exe_exists() -> bool:
+    """Return True if a Playwright-managed Chromium binary is present on disk."""
+    system = platform.system()
+    home = Path.home()
+    if system == 'Linux':
+        return bool(list(home.glob('.cache/ms-playwright/chromium-*/chrome-linux/chrome')))
+    if system == 'Darwin':
+        return bool(list(home.glob('Library/Caches/ms-playwright/chromium-*/chrome-mac*/Chromium.app/Contents/MacOS/Chromium')))
+    if system == 'Windows':
+        local = Path(os.environ.get('LOCALAPPDATA', str(home / 'AppData' / 'Local')))
+        return bool(list(local.glob('ms-playwright/chromium-*/chrome-win/chrome.exe')))
+    return False
+
+
+def _ensure_playwright_browsers():
+    """Install Playwright Chromium on first run if the binary is absent."""
+    if _chromium_exe_exists():
+        print('[setup] Playwright Chromium: found')
+        return
+
+    print('[setup] Playwright Chromium not found — installing (may take a few minutes)...')
+    try:
+        from playwright._impl._driver import compute_driver_executable
+        node_exe, cli_js = compute_driver_executable()
+        result = subprocess.run(
+            [str(node_exe), str(cli_js), 'install', 'chromium'],
+            timeout=600,
+        )
+        if result.returncode == 0:
+            print('[setup] Playwright Chromium installed successfully')
+        else:
+            print(f'[setup] Warning: playwright install exited with code {result.returncode}')
+    except Exception as exc:
+        print(f'[setup] Warning: could not auto-install Playwright Chromium: {exc}')
+        print('[setup] Run manually: playwright install chromium')
+
+
 if __name__ == '__main__':
     port = int(os.getenv('PORT', 5000))
     host = os.getenv('HOST', '127.0.0.1')
     debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
+
+    _ensure_playwright_browsers()
 
     print("=" * 60)
     print("QAI Backend API Server")
