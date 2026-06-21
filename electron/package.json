@@ -1,0 +1,69 @@
+{
+  "name": "qai-desktop",
+  "version": "1.0.0",
+  "description": "QAI - Website UI & CTA Audit Tool",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron . --dev",
+    "build": "electron-builder",
+    "build:linux": "electron-builder --linux",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win"
+  },
+  "dependencies": {
+    "electron-store": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^36.0.0",
+    "electron-builder": "^25.0.0"
+  },
+  "build": {
+    "appId": "com.qai.desktop",
+    "productName": "QAI",
+    "directories": {
+      "output": "../dist-electron"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "node_modules/electron-store/**/*",
+      "node_modules/conf/**/*",
+      "node_modules/env-paths/**/*",
+      "node_modules/atomically/**/*",
+      "node_modules/dot-prop/**/*",
+      "node_modules/json-schema-typed/**/*",
+      "node_modules/onetime/**/*",
+      "node_modules/mimic-fn/**/*",
+      "node_modules/pkg-up/**/*",
+      "node_modules/find-up/**/*",
+      "node_modules/locate-path/**/*",
+      "node_modules/p-locate/**/*",
+      "node_modules/p-limit/**/*",
+      "node_modules/yocto-queue/**/*",
+      "node_modules/path-exists/**/*",
+      "node_modules/graceful-fs/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../qai-client/dist",
+        "to": "app"
+      },
+      {
+        "from": "resources/backend",
+        "to": "backend",
+        "filter": ["**/*"]
+      }
+    ],
+    "linux": {
+      "target": "AppImage",
+      "category": "Utility"
+    },
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": "nsis"
+    }
+  }
+}
