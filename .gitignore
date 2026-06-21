@@ -1,0 +1,29 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.eggs/
+backend/venv/
+backend/.env
+backend/dist/
+backend/build/
+backend/*.spec.bak
+
+# ── Node / frontend ───────────────────────────────────────────────────────────
+node_modules/
+qai-client/dist/
+qai-client/.env
+
+# ── Electron ──────────────────────────────────────────────────────────────────
+dist-electron/
+electron/node_modules/
+electron/resources/backend/qai-backend/
+
+# ── OS & editor ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/settings.json
+*.swp
+*.swo

@@ -99,9 +99,11 @@ async def bfs_crawler(starting_url, max_pages=5, audit_config=None, emit_log=Non
         log(f"URL: {current_url}", 'url')
 
         try:
-            # Extract navigation links
-            log("Extracting navigation links...", 'info')
-            extracted = await extract_redirects(current_url, emit_log=emit_log, stop_flag=stop_flag)
+            # Extract navigation links only if more pages can still be crawled
+            extracted = None
+            if max_pages > 1 and page_count < max_pages:
+                log("Extracting navigation links...", 'info')
+                extracted = await extract_redirects(current_url, emit_log=emit_log, stop_flag=stop_flag)
 
             if is_stopped():
                 break

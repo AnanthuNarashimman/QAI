@@ -1,7 +1,7 @@
 {
   "name": "qai-desktop",
   "version": "1.0.0",
-  "description": "QAI - Website UI & CTA Audit Tool",
+  "description": "QAI — Website UI & CTA Audit Tool",
   "main": "main.js",
   "scripts": {
     "start": "electron . --dev",
@@ -20,28 +20,18 @@
   "build": {
     "appId": "com.qai.desktop",
     "productName": "QAI",
+    "copyright": "Copyright © 2025 QAI",
+    "asar": true,
+    "npmRebuild": false,
+    "publish": null,
     "directories": {
-      "output": "../dist-electron"
+      "output": "../dist-electron",
+      "buildResources": "build"
     },
     "files": [
       "main.js",
       "preload.js",
-      "node_modules/electron-store/**/*",
-      "node_modules/conf/**/*",
-      "node_modules/env-paths/**/*",
-      "node_modules/atomically/**/*",
-      "node_modules/dot-prop/**/*",
-      "node_modules/json-schema-typed/**/*",
-      "node_modules/onetime/**/*",
-      "node_modules/mimic-fn/**/*",
-      "node_modules/pkg-up/**/*",
-      "node_modules/find-up/**/*",
-      "node_modules/locate-path/**/*",
-      "node_modules/p-locate/**/*",
-      "node_modules/p-limit/**/*",
-      "node_modules/yocto-queue/**/*",
-      "node_modules/path-exists/**/*",
-      "node_modules/graceful-fs/**/*"
+      "package.json"
     ],
     "extraResources": [
       {
@@ -55,15 +45,21 @@
       }
     ],
     "linux": {
-      "target": "AppImage",
+      "target": [
+        { "target": "AppImage", "arch": ["x64"] }
+      ],
       "category": "Utility"
     },
     "mac": {
-      "target": "dmg",
+      "target": [
+        { "target": "dmg", "arch": ["x64", "arm64"] }
+      ],
       "category": "public.app-category.developer-tools"
     },
     "win": {
-      "target": "nsis"
+      "target": [
+        { "target": "nsis", "arch": ["x64"] }
+      ]
     }
   }
 }
