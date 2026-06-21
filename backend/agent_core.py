@@ -11,15 +11,6 @@ from typing import List
 
 load_dotenv()
 
-# Cloud vs Local browser detection
-USE_CLOUD = bool(os.getenv('BROWSER_USE_API_KEY'))
-
-def create_browser_session():
-    """Create a BrowserSession configured for cloud (Render) or local dev."""
-    if USE_CLOUD:
-        return BrowserSession(use_cloud=True)
-    return BrowserSession()
-
 # Strip ANSI escape codes from strings
 ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
 
@@ -200,7 +191,7 @@ async def extract_redirects(url, emit_log=None, stop_flag=None):
     Stay on the domain of the provided url {url}
     """
 
-    browser_session = create_browser_session()
+    browser_session = BrowserSession()
 
     agent = Agent(task=task, llm=llm, controller=extraction_controller, browser_session=browser_session, register_should_stop_callback=stop_callback)
     try:
@@ -354,7 +345,7 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
     ⚠️ If scores are 0 with no reasoning, go back and re-analyze.
     """
     
-    browser_session = create_browser_session()
+    browser_session = BrowserSession()
 
     agent = Agent(
         llm=llm,

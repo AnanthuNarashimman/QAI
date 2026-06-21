@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit
 import asyncio
+import os
 import threading
 import requests
 from urllib.parse import urlparse
@@ -9,10 +10,12 @@ from bfs_crawler import bfs_crawler
 from utils.intent import extract_audit_config
 
 app = Flask(__name__)
-CORS(app, origins=["https://vibeaudit-delta.vercel.app", "http://localhost:5173", "http://localhost:5174"])
+# Desktop app: all traffic is localhost, so wildcard CORS is safe.
+# The web deployment restricts this via a reverse proxy instead.
+CORS(app, origins="*")
 
 # Initialize SocketIO with CORS support
-socketio = SocketIO(app, cors_allowed_origins=["https://vibeaudit-delta.vercel.app", "http://localhost:5173", "http://localhost:5174"], async_mode='threading')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Track active analysis sessions: sid -> threading.Event (stop flag)
 active_sessions = {}
@@ -260,13 +263,15 @@ def root():
 
 
 if __name__ == '__main__':
-    print("="*60)
-    print("QAI Backend API Server")
-    print("="*60)
-    print("Server starting on http://localhost:5000")
-    print("API endpoint: POST http://localhost:5000/api/analyze")
-    print("WebSocket: ws://localhost:5000 (event: start_analysis)")
-    print("Health check: GET http://localhost:5000/api/health")
-    print("="*60)
+    port = int(os.getenv('PORT', 5000))
+    host = os.getenv('HOST', '127.0.0.1')
+    debug = os.getenv('FLASK_DEBUG', 'false').lower() == 'true'
 
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000)
+    print("=" * 60)
+    print("QAI Backend API Server")
+    print("=" * 60)
+    print(f"Server starting on http://{host}:{port}")
+    print(f"Health check: GET http://{host}:{port}/api/health")
+    print("=" * 60)
+
+    socketio.run(app, debug=debug, host=host, port=port)

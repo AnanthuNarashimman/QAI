@@ -28,6 +28,7 @@ function spawnBackend() {
   const backendEnv = {
     ...process.env,
     PORT: String(BACKEND_PORT),
+    HOST: '127.0.0.1',
     GEMINI_API_KEY: store.get('geminiApiKey', ''),
     ENABLE_SCREENSHOTS: 'yes',
     PYTHONUNBUFFERED: '1'
