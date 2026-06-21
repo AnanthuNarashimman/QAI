@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
 import LandingPage from './Pages/LandingPage'
 import AgentPage from './AgentPage/AgentPage'
 import AuditPage from './AuditPage/AuditPage'
@@ -16,8 +16,8 @@ const ProtectedRoute = ({ children }) => {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Analytics />
+    <HashRouter>
+      {!window.electronAPI?.isElectron && <Analytics />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
@@ -27,7 +27,7 @@ function App() {
         <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
         <Route path="/report" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   )
 }
 

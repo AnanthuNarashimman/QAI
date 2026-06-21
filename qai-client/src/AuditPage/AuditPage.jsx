@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { io } from 'socket.io-client';
+import { getBackendUrl } from '../utils/backendUrl';
 import styles from './AuditPage.module.css';
 import AuthNavbar from '../Components/Navbar/AuthNavbar';
 import { Bot, Loader, ExternalLink, Square, CheckCircle2, Globe, Zap, Search, Compass, BrainCog, Play, Hash, AlertTriangle, X, PenTool, FileText, ShieldCheck, ShieldX } from 'lucide-react';
@@ -48,46 +49,52 @@ function AuditPage() {
 
   // Connect to WebSocket on mount
   useEffect(() => {
-    const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000');
-    socketRef.current = socket;
+    let cancelled = false;
+    let socket = null;
 
-    socket.on('connect', () => {
-      setLogs(prev => [...prev, { message: 'Connected to server', type: 'success' }]);
+    getBackendUrl().then(url => {
+      if (cancelled) return;
 
-      // Start analysis
-      socket.emit('start_analysis', {
-        url: auditUrl,
-        max_pages: maxPages,
-        user_intent: userIntent,
+      socket = io(url);
+      socketRef.current = socket;
+
+      socket.on('connect', () => {
+        setLogs(prev => [...prev, { message: 'Connected to server', type: 'success' }]);
+        socket.emit('start_analysis', {
+          url: auditUrl,
+          max_pages: maxPages,
+          user_intent: userIntent,
+        });
+      });
+
+      socket.on('log', (data) => {
+        setLogs(prev => [...prev, data]);
+      });
+
+      socket.on('complete', (data) => {
+        setLogs(prev => [...prev, { message: 'Analysis complete!', type: 'success' }]);
+        setAuditResults(data.data);
+        setIsRunning(false);
+      });
+
+      socket.on('error', (data) => {
+        setLogs(prev => [...prev, { message: `Error: ${data.message}`, type: 'error' }]);
+        setIsRunning(false);
+      });
+
+      socket.on('connect_error', () => {
+        setLogs(prev => [...prev, { message: 'Failed to connect to backend', type: 'error' }]);
+        setIsRunning(false);
+      });
+
+      socket.on('disconnect', () => {
+        setIsRunning(false);
       });
     });
 
-    socket.on('log', (data) => {
-      setLogs(prev => [...prev, data]);
-    });
-
-    socket.on('complete', (data) => {
-      setLogs(prev => [...prev, { message: 'Analysis complete!', type: 'success' }]);
-      setAuditResults(data.data);
-      setIsRunning(false);
-    });
-
-    socket.on('error', (data) => {
-      setLogs(prev => [...prev, { message: `Error: ${data.message}`, type: 'error' }]);
-      setIsRunning(false);
-    });
-
-    socket.on('connect_error', () => {
-      setLogs(prev => [...prev, { message: 'Failed to connect to backend', type: 'error' }]);
-      setIsRunning(false);
-    });
-
-    socket.on('disconnect', () => {
-      setIsRunning(false);
-    });
-
     return () => {
-      socket.disconnect();
+      cancelled = true;
+      socket?.disconnect();
     };
   }, [auditUrl, maxPages, userIntent]);
 
