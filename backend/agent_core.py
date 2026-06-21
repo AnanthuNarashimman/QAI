@@ -240,7 +240,7 @@ async def validate_page(url, audit_config=None, emit_log=None, stop_flag=None):
         async def stop_callback():
             return stop_flag.is_set()
 
-    llm = ChatGoogle(model="gemini-2.5-flash")
+    llm = ChatGoogle(model="gemini-2.5-flash-lite")
 
     validation_controller = Controller(output_model= Values)
     
