@@ -1,0 +1,321 @@
+.container {
+  min-height: 100vh;
+  background-color: #e0f2f7;
+  color: #1a1a2e;
+  font-family: var(--font-primary);
+  position: relative;
+}
+
+.container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0, 180, 216, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 180, 216, 0.15) 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 120px 24px 60px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Header ──────────────────────────────────────────────────────────────── */
+
+.header {
+  margin-bottom: 28px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a2e;
+  letter-spacing: -0.5px;
+  margin-bottom: 6px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: rgba(26, 26, 46, 0.5);
+}
+
+/* ── Card ────────────────────────────────────────────────────────────────── */
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 24px rgba(0, 180, 216, 0.08);
+  backdrop-filter: blur(10px);
+  margin-bottom: 16px;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.cardIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(0, 180, 216, 0.1);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #00B4D8;
+  flex-shrink: 0;
+}
+
+.cardTitle {
+  font-family: var(--font-heading);
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin-bottom: 3px;
+}
+
+.cardDesc {
+  font-size: 13px;
+  color: rgba(26, 26, 46, 0.5);
+}
+
+.keyStatus {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  border-radius: 20px;
+  margin-left: auto;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.keyStatusOk {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.1);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.keyStatusMissing {
+  color: #d97706;
+  background: rgba(217, 119, 6, 0.1);
+  border: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+/* ── Field row ────────────────────────────────────────────────────────────── */
+
+.fieldRow {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  margin-bottom: 14px;
+}
+
+.inputWrapper {
+  position: relative;
+  flex: 1;
+}
+
+.input {
+  width: 100%;
+  padding: 11px 42px 11px 14px;
+  background: rgba(0, 180, 216, 0.04);
+  border: 1px solid rgba(0, 180, 216, 0.2);
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input:focus {
+  border-color: #00B4D8;
+  box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.12);
+}
+
+.input::placeholder {
+  color: rgba(26, 26, 46, 0.35);
+  font-family: var(--font-primary);
+}
+
+.eyeBtn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(26, 26, 46, 0.4);
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s;
+}
+
+.eyeBtn:hover {
+  color: #00B4D8;
+}
+
+.saveBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 20px;
+  background: #00B4D8;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-family: var(--font-button);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+  box-shadow: 0 3px 12px rgba(0, 180, 216, 0.35);
+}
+
+.saveBtn:hover:not(:disabled) {
+  background: #0096c7;
+  box-shadow: 0 4px 16px rgba(0, 180, 216, 0.4);
+  transform: translateY(-1px);
+}
+
+.saveBtn:disabled {
+  background: rgba(0, 180, 216, 0.4);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.spinIcon {
+  animation: spin 0.8s linear infinite;
+}
+
+/* ── Status messages ──────────────────────────────────────────────────────── */
+
+.statusSaved,
+.statusError {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+}
+
+.statusSaved {
+  color: #059669;
+  background: rgba(5, 150, 105, 0.08);
+  border: 1px solid rgba(5, 150, 105, 0.2);
+}
+
+.statusError {
+  color: #dc2626;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+/* ── Hint ─────────────────────────────────────────────────────────────────── */
+
+.hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(26, 26, 46, 0.5);
+  margin-top: 4px;
+}
+
+.hintLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: #00B4D8;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.hintLink:hover {
+  color: #0096c7;
+  text-decoration: underline;
+}
+
+/* ── Info card ────────────────────────────────────────────────────────────── */
+
+.infoCard {
+  padding: 14px 18px;
+  background: rgba(0, 180, 216, 0.05);
+  border: 1px solid rgba(0, 180, 216, 0.15);
+  border-radius: 12px;
+}
+
+.infoText {
+  font-size: 12.5px;
+  color: rgba(26, 26, 46, 0.55);
+  line-height: 1.6;
+}
+
+.infoText strong {
+  color: rgba(26, 26, 46, 0.75);
+  font-weight: 600;
+}
+
+/* ── Web fallback ─────────────────────────────────────────────────────────── */
+
+.webFallback {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 32px 16px;
+  gap: 12px;
+}
+
+.webFallbackIcon {
+  color: rgba(26, 26, 46, 0.3);
+}
+
+.webFallbackTitle {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a2e;
+}
+
+.webFallbackText {
+  font-size: 14px;
+  color: rgba(26, 26, 46, 0.55);
+  line-height: 1.6;
+  max-width: 380px;
+}
+
+.code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  background: rgba(0, 180, 216, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #00829a;
+}

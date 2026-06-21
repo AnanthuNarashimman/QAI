@@ -6,6 +6,7 @@ import ReportPage from './ReportPage/ReportPage'
 import LoginPage from './Pages/LoginPage'
 import ResourcesPage from './ResourcesPage/ResourcesPage'
 import HistoryPage from './HistoryPage/HistoryPage'
+import SettingsPage from './SettingsPage/SettingsPage'
 
 import { Analytics } from "@vercel/analytics/react"
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
         <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
         <Route path="/report" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
       </Routes>
     </HashRouter>
   )
