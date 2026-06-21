@@ -316,4 +316,4 @@ if __name__ == '__main__':
     print(f"Health check: GET http://{host}:{port}/api/health")
     print("=" * 60)
 
-    socketio.run(app, debug=debug, host=host, port=port)
+    socketio.run(app, debug=debug, host=host, port=port, allow_unsafe_werkzeug=True)

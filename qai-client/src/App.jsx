@@ -1,33 +1,22 @@
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom'
-import LandingPage from './Pages/LandingPage'
 import AgentPage from './AgentPage/AgentPage'
 import AuditPage from './AuditPage/AuditPage'
 import ReportPage from './ReportPage/ReportPage'
-import LoginPage from './Pages/LoginPage'
 import ResourcesPage from './ResourcesPage/ResourcesPage'
 import HistoryPage from './HistoryPage/HistoryPage'
 import SettingsPage from './SettingsPage/SettingsPage'
 
-import { Analytics } from "@vercel/analytics/react"
-
-const ProtectedRoute = ({ children }) => {
-  const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
-  return isAuthenticated ? children : <Navigate to="/login" replace />;
-};
-
 function App() {
   return (
     <HashRouter>
-      {!window.electronAPI?.isElectron && <Analytics />}
       <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/agent" element={<ProtectedRoute><AgentPage /></ProtectedRoute>} />
-        <Route path="/audit" element={<ProtectedRoute><AuditPage /></ProtectedRoute>} />
-        <Route path="/history" element={<ProtectedRoute><HistoryPage /></ProtectedRoute>} />
-        <Route path="/resources" element={<ProtectedRoute><ResourcesPage /></ProtectedRoute>} />
-        <Route path="/report" element={<ProtectedRoute><ReportPage /></ProtectedRoute>} />
-        <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+        <Route path="/" element={<Navigate to="/agent" replace />} />
+        <Route path="/agent" element={<AgentPage />} />
+        <Route path="/audit" element={<AuditPage />} />
+        <Route path="/history" element={<HistoryPage />} />
+        <Route path="/resources" element={<ResourcesPage />} />
+        <Route path="/report" element={<ReportPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
       </Routes>
     </HashRouter>
   )

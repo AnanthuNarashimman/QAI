@@ -1,17 +1,10 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './AuthNavbar.module.css';
-import { Shield, LogOut, History, BookOpen, Settings } from 'lucide-react';
-
-const isElectron = !!window.electronAPI?.isElectron;
+import { Shield, History, BookOpen, Settings } from 'lucide-react';
 
 function AuthNavbar() {
   const navigate = useNavigate();
   const location = useLocation();
-
-  const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    navigate('/');
-  };
 
   const isActive = (path) => location.pathname === path;
 
@@ -46,21 +39,15 @@ function AuthNavbar() {
             <BookOpen size={16} />
             Resources
           </button>
-          {isElectron && (
-            <button
-              className={`${styles.navLink} ${isActive('/settings') ? styles.navLinkActive : ''}`}
-              onClick={() => navigate('/settings')}
-            >
-              <Settings size={16} />
-              Settings
-            </button>
-          )}
         </div>
 
         <div className={styles.navRight}>
-          <button className={styles.logoutBtn} onClick={handleLogout}>
-            <LogOut size={16} />
-            Logout
+          <button
+            className={`${styles.settingsBtn} ${isActive('/settings') ? styles.settingsBtnActive : ''}`}
+            onClick={() => navigate('/settings')}
+            title="Settings"
+          >
+            <Settings size={17} />
           </button>
         </div>
       </div>
