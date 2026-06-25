@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
-import { Shield, LogOut } from 'lucide-react';
+import { Shield, LogOut, Download } from 'lucide-react';
 
 function Navbar() {
   const navigate = useNavigate();
@@ -72,19 +72,14 @@ function Navbar() {
 
         <div className={`${styles.navRight} ${isScrolled ? styles.hidden : ''}`}>
           {isAuthenticated && isProtectedRoute ? (
-            <button
-              className={styles.logoutBtn}
-              onClick={handleLogout}
-            >
+            <button className={styles.logoutBtn} onClick={handleLogout}>
               <LogOut size={18} />
               Logout
             </button>
           ) : (
-            <button
-              className={styles.bookDemoBtn}
-              onClick={() => navigate('/login')}
-            >
-              Get started
+            <button className={styles.navDownloadBtn} disabled>
+              <Download size={14} />
+              Download
             </button>
           )}
         </div>

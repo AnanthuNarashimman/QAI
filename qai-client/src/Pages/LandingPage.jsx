@@ -2,12 +2,13 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import styles from './LandingPage.module.css';
 import Navbar from '../Components/Navbar';
+import BlurText from '../components/reactbits/BlurText';
 import {
-  Star, StarHalf, Play, Zap, CheckCircle,
+  Star, StarHalf, Zap, CheckCircle,
   MousePointerClick, Palette, AlertTriangle, Lightbulb,
   TrendingUp, Minus, Globe, Github, ArrowRight,
   GitPullRequest, GitCommit, CircleDot, Search,
-  Shield, Twitter, Linkedin, Mail, Send
+  Shield, Twitter, Linkedin, Mail, Send, Download, Clock
 } from 'lucide-react';
 import hero from "../assets/Hero.png";
 
@@ -41,48 +42,28 @@ function LandingPage() {
           <div className={styles.heroContent}>
             <div className={styles.heroLeft}>
               <h1 className={styles.heroTitle}>
-                Put your <span className={styles.titleHighlight}>website</span> <span className={styles.titleAccent}>first</span>
+                Website audits that start with <span className={`${styles.titleHighlight} ${styles.titleAccent}`}>vision</span>, not code
               </h1>
               <p className={styles.heroSubtitle}>
-                Fast, AI-powered and intelligent - turn design chaos into
-                clarity and streamline your audits with automated
-                quality analysis powered by Gemini.
+                AI browser agent that scroll, see, and audit your website, delivering screenshot-backed feedback on design quality, CTAs, and visual consistency.
               </p>
 
               <div className={styles.heroBtns}>
-                <button className={styles.getStartedBtn} onClick={() => navigate('/login')}>
-                  Get started
+                <button className={styles.downloadBtn} disabled>
+                  <Download size={16} />
+                  Download for your device
                 </button>
-                <button className={styles.watchDemoBtn}>
-                  <Play size={16} />
-                  Watch demo
+                <button className={styles.watchDemoBtn} onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
+                  Learn more
                 </button>
               </div>
 
-              {/* Stats */}
-              <div className={styles.statsGrid}>
-                <div className={styles.statCard}>
-                  <div className={styles.statValue}>98.5%</div>
-                  <div className={styles.statLabel}>Issue detection rate</div>
-                </div>
-                <div className={styles.statCard}>
-                  <div className={styles.statValue}>~5min</div>
-                  <div className={styles.statLabel}>Average audit time</div>
-                </div>
+              <div className={styles.comingSoon}>
+                <Clock size={13} />
+                <span>Desktop app coming soon</span>
               </div>
 
-              {/* Rating */}
-              <div className={styles.rating}>
-                <div className={styles.stars}>
-                  <Star size={18} fill="currentColor" />
-                  <Star size={18} fill="currentColor" />
-                  <Star size={18} fill="currentColor" />
-                  <Star size={18} fill="currentColor" />
-                  <StarHalf size={18} fill="currentColor" />
-                  <span className={styles.ratingValue}>4.5</span>
-                </div>
-                <span className={styles.ratingLabel}>Average user rating</span>
-              </div>
+
             </div>
 
             {/* Right side - Hero Image */}
@@ -122,11 +103,9 @@ function LandingPage() {
         {/* How It Works Section */}
         <section id="how-it-works" className={styles.howItWorks}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>How It Works</span>
-            <h2 className={styles.sectionTitle}>Four steps to a perfect audit</h2>
-            <p className={styles.sectionSubtitle}>
-              Our AI-powered agent handles the heavy lifting while you focus on what matters
-            </p>
+            <BlurText text="How It Works" element="span" className={styles.sectionTag} delay={80} animateBy="words" direction="bottom" stepDuration={0.3} />
+            <BlurText text="Four steps to a perfect audit" element="h2" className={styles.sectionTitle} delay={100} animateBy="words" direction="bottom" stepDuration={0.4} />
+            <BlurText text="Our AI-powered agent handles the heavy lifting while you focus on what matters" element="p" className={styles.sectionSubtitle} delay={120} animateBy="words" direction="bottom" stepDuration={0.35} />
           </div>
 
           <div className={styles.stepsContainer}>
@@ -231,11 +210,9 @@ function LandingPage() {
         {/* Features / Insights Section */}
         <section id="features" className={styles.features}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>Features</span>
-            <h2 className={styles.sectionTitle}>Discover actionable insights</h2>
-            <p className={styles.sectionSubtitle}>
-              Every audit delivers a rich, detailed report packed with scores, issues, and recommendations
-            </p>
+            <BlurText text="Features" element="span" className={styles.sectionTag} delay={80} animateBy="words" direction="bottom" stepDuration={0.3} />
+            <BlurText text="Discover actionable insights" element="h2" className={styles.sectionTitle} delay={100} animateBy="words" direction="bottom" stepDuration={0.4} />
+            <BlurText text="Every audit delivers a rich, detailed report packed with scores, issues, and recommendations" element="p" className={styles.sectionSubtitle} delay={120} animateBy="words" direction="bottom" stepDuration={0.35} />
           </div>
 
           <div className={styles.featuresGrid}>
@@ -541,11 +518,9 @@ function LandingPage() {
         {/* CTA Section */}
         <section id="get-involved" className={styles.ctaSection}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>Get Involved</span>
-            <h2 className={styles.sectionTitle}>Start auditing or start contributing</h2>
-            <p className={styles.sectionSubtitle}>
-              Jump into your first audit or help shape the future of VibeAudit
-            </p>
+            <BlurText text="Get Involved" element="span" className={styles.sectionTag} delay={80} animateBy="words" direction="bottom" stepDuration={0.3} />
+            <BlurText text="Start auditing or start contributing" element="h2" className={styles.sectionTitle} delay={100} animateBy="words" direction="bottom" stepDuration={0.4} />
+            <BlurText text="Jump into your first audit or help shape the future of VibeAudit" element="p" className={styles.sectionSubtitle} delay={120} animateBy="words" direction="bottom" stepDuration={0.35} />
           </div>
 
           <div className={styles.ctaGrid}>
@@ -667,11 +642,9 @@ function LandingPage() {
         {/* Contact Section */}
         <section id="contact" className={styles.contactSection}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionTag}>Contact</span>
-            <h2 className={styles.sectionTitle}>Get in touch</h2>
-            <p className={styles.sectionSubtitle}>
-              Have a question, suggestion, or just want to say hi? Drop us a message.
-            </p>
+            <BlurText text="Contact" element="span" className={styles.sectionTag} delay={80} animateBy="words" direction="bottom" stepDuration={0.3} />
+            <BlurText text="Get in touch" element="h2" className={styles.sectionTitle} delay={100} animateBy="words" direction="bottom" stepDuration={0.4} />
+            <BlurText text="Have a question, suggestion, or just want to say hi? Drop us a message." element="p" className={styles.sectionSubtitle} delay={120} animateBy="words" direction="bottom" stepDuration={0.35} />
           </div>
 
           <form className={styles.contactForm} onSubmit={handleContactSend}>
