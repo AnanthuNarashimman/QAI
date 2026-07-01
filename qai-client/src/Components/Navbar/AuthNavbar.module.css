@@ -42,6 +42,12 @@
   color: #00B4D8;
 }
 
+.logoImg {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
 .logoText {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 1.1rem;

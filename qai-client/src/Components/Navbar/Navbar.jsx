@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
-import { Shield, LogOut, Download } from 'lucide-react';
+import { LogOut, Download } from 'lucide-react';
+import logo from "../../assets/logo.png"; // Adjust the path as necessary
 
 function Navbar() {
   const navigate = useNavigate();
@@ -46,13 +47,13 @@ function Navbar() {
       <div className={styles.navInner}>
         <div className={`${styles.navLeft} ${isScrolled ? styles.hidden : ''}`}>
           <div className={styles.logo} onClick={() => { navigate('/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-            <Shield size={20} />
+            <img src={logo} alt="VibeAudit" className={styles.logoImg} />
             <span className={styles.logoText}>VibeAudit</span>
           </div>
         </div>
 
         <div className={`${styles.logoMinimized} ${isScrolled ? styles.visible : ''}`} onClick={() => { navigate('/'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          <Shield size={24} />
+          <img src={logo} alt="VibeAudit" className={styles.logoImgMinimized} />
         </div>
 
         <div className={`${styles.navCenter} ${isScrolled ? styles.hidden : ''}`}>

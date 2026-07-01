@@ -6,7 +6,7 @@ import BlurText from '../components/reactbits/BlurText';
 import {
   Star, StarHalf, Zap, CheckCircle,
   MousePointerClick, Palette, AlertTriangle, Lightbulb,
-  TrendingUp, Minus, Globe, Github, ArrowRight,
+  TrendingUp, Minus, Globe, Github,
   GitPullRequest, GitCommit, CircleDot, Search,
   Shield, Twitter, Linkedin, Mail, Send, Download, Clock
 } from 'lucide-react';
@@ -16,6 +16,7 @@ import sc1 from "../assets/SC1.png";
 import sc2 from "../assets/SC2.png";
 import sc3 from "../assets/SC3.png";
 import sc4 from "../assets/SC4.png";
+import logo from "../assets/logo.png";
 
 function LandingPage() {
   const navigate = useNavigate();
@@ -571,9 +572,14 @@ function LandingPage() {
                 <p className={styles.ctaCardDescription}>
                   Enter a URL, configure your preferences, and get a comprehensive AI-powered report in minutes.
                 </p>
-                <button className={styles.ctaPrimary} onClick={() => navigate('/login')}>
-                  Get Started <ArrowRight size={16} />
+                <button className={styles.downloadBtn} disabled style={{ alignSelf: 'flex-start' }}>
+                  <Download size={16} />
+                  Download App
                 </button>
+                <div className={styles.comingSoon}>
+                  <Clock size={13} />
+                  <span>Desktop app coming soon</span>
+                </div>
               </div>
             </div>
 
@@ -699,7 +705,7 @@ function LandingPage() {
         <div className={styles.footerInner}>
           <div className={styles.footerBrand}>
             <div className={styles.footerLogo}>
-              <Shield size={22} />
+              <img src={logo} alt="VibeAudit" className={styles.footerLogoImg} />
               <span>VibeAudit</span>
             </div>
             <p className={styles.footerTagline}>

@@ -89,6 +89,18 @@
   color: #0096c7;
 }
 
+.logoImg {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.logoImgMinimized {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
 .logoText {
   font-family: var(--font-heading, 'Space Grotesk', sans-serif);
   font-size: 1.15rem;

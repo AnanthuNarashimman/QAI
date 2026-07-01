@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './AuthNavbar.module.css';
-import { Shield, LogOut, History, BookOpen } from 'lucide-react';
+import { LogOut, History, BookOpen } from 'lucide-react';
+import logo from "../../assets/logo.png";
 
 function AuthNavbar() {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function AuthNavbar() {
       <div className={styles.navInner}>
         <div className={styles.navLeft}>
           <div className={styles.logo} onClick={() => navigate('/agent')}>
-            <Shield size={22} />
+            <img src={logo} alt="VibeAudit" className={styles.logoImg} />
             <span className={styles.logoText}>VibeAudit</span>
           </div>
         </div>

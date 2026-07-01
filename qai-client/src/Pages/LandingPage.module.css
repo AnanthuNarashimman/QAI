@@ -1004,7 +1004,6 @@
   background: #0096c7;
   box-shadow: 0 4px 20px rgba(0, 180, 216, 0.45);
 }
-
 .ctaSecondary {
   display: inline-flex;
   align-items: center;
@@ -1372,6 +1371,12 @@
 
 .footerLogo span {
   color: #ffffff;
+}
+
+.footerLogoImg {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
 }
 
 .footerTagline {
